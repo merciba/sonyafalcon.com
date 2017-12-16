@@ -1,0 +1,85 @@
+service: sonyafalcon-user
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: us-east-1
+  memorySize: 128
+  timeout: 6
+  environment:
+    DYNAMODB_TABLE: sf-users
+    GOOGLE_CLIENT_ID: ${file(../../credentials.json):google.clientId}
+    GOOGLE_CLIENT_SECRET: ${file(../../credentials.json):google.clientSecret}
+    GOOGLE_REDIRECT_URL: ${file(../../credentials.json):google.redirectUri}
+    ADMIN_EMAIL: ${file(../../credentials.json):adminEmail}
+    SENDGRID_API_KEY: ${file(../../credentials.json):sendgridAPIKey}
+
+functions:
+  getUser:
+    handler: handler.login
+    events:
+      - http:
+          path: /login
+          method: post
+          integration: lambda
+          cors: true
+  createUser:
+    handler: handler.createUser
+    events:
+      - http:
+          path: /
+          method: post
+          integration: lambda
+          cors: true
+  authenticate:
+    handler: handler.authenticate
+    events:
+      - http:
+          path: /authenticate
+          method: post
+          integration: lambda
+          cors: true
+  addEmailToList:
+    handler: handler.addEmailToList
+    events:
+      - http:
+          path: /newsletter/subscribe
+          method: post
+          integration: lambda
+          cors: true
+
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: sf-users
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+    DynamoDBIamPolicy:
+      Type: AWS::IAM::Policy
+      DependsOn: DynamoDbTable
+      Properties:
+        PolicyName: lambda-dynamodb
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+                - dynamodb:BatchGetItem
+              Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        Roles:
+          - Ref: IamRoleLambdaExecution

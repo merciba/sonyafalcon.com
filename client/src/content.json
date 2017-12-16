@@ -1,0 +1,34 @@
+{
+  "MENU": {
+    "ITEMS": {
+      "LEFT": [
+        {
+          "title": "Sonya Falcon",
+          "url": "/",
+          "color": "#333333"
+        },
+        {
+          "title": "Projects",
+          "url": "/projects",
+          "color": "black"
+        },
+        {
+          "title": "About",
+          "url": "/about",
+          "color": "black"
+        }
+      ],
+      "RIGHT": [
+        {
+          "title": "ABOUT",
+          "url": "/about",
+          "color": "#555555",
+          "flex": "1 1 auto"
+        }
+      ]
+    }
+  },
+  "FOOTER": {
+    "LEFT": "© 2017 Merciba LLC. All rights reserved."
+  }
+}
