@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { markdown } from 'markdown'
+import { markdownToHtml } from '../util'
 import moment from 'moment'
 import Dropzone from 'react-dropzone'
 import TagsInput from 'react-tagsinput'
@@ -100,7 +100,7 @@ class PostEditor extends Component {
       scheduled: moment(),
       html: '',
       files: [],
-      textAreaHeight: 500,
+      textAreaHeight: window.innerHeight * 0.65,
       editor: null,
       isModalOpen: 'modal'
     }
@@ -132,11 +132,11 @@ class PostEditor extends Component {
         }
       })
       .catch((err) => {
-        window.location.replace('/login')
+        //window.location.replace('/login')
       })
     setInterval(this.saveDraft.bind(this), 15000)
 
-    if (this._preview) this._preview.innerHTML = markdown.toHTML(this.state.rawText)
+    if (this._preview) this._preview.innerHTML = markdownToHtml(this.state.rawText)
   }
   initEditor () {
     this.setState({ editor: <StatefulEditor style={{ borderWidth: 0, fontSize: 16, borderRadius: 2, backgroundColor: '#eeeeee', fontFamily: 'Courier New', fontWeight: 'bold', width: '100%', height: this.state.textAreaHeight }} onUploadImage={this.onUploadImage.bind(this)} default={this.state.rawText} notify={notify.show} onChange={this.changeBody.bind(this)} /> })
@@ -175,7 +175,7 @@ class PostEditor extends Component {
     if (this._titlePreview) this._titlePreview.innerHTML = e.target.value
   }
   changeBody (rawText) {
-    let html = markdown.toHTML(rawText)
+    let html = markdownToHtml(rawText)
     this.setState({ rawText, html })
     let previewHeight = this._preview.clientHeight
     this.setState({ textAreaHeight: previewHeight > 500 ? previewHeight : 500 })
@@ -243,14 +243,14 @@ class PostEditor extends Component {
       })
   }
   render () {
-    return (<section className='section' style={{ height: window.innerHeight }}>
+    return (<section className='section' style={{ height: window.innerHeight, width: '100%' }}>
       <Notifications />
-      <div className='container'>
+      <div>
         <h1 className='title'>Sonya Falcon</h1>
         <h2 className='subtitle'>Editor</h2>
         <a href='/dashboard'>&lt; Back to Dashboard</a>
-        <div className='container level' style={{ height: '100%' }}>
-          <EditorContainer className='level-left level-item'>
+        <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+          <EditorContainer style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <div className='control' style={{ marginBottom: 5, marginTop: 15 }}>
               <input style={{ borderRadius: 2, backgroundColor: '#eeeeee', height: 40, width: '100%', fontSize: 20 }} type='text' defaultValue={this.state.title} ref={(ref) => { this._title = ref }} onChange={this.changeTitle.bind(this)} placeholder='New Post' />
             </div>
@@ -290,11 +290,13 @@ class PostEditor extends Component {
             </FlexContainer>
             { this.state.editor }
             <TagsInput value={this.state.tags} onChange={this.changeTags.bind(this)} />
-            { this.state.published ? null : <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Save</PublishButton> }
-            { this.state.published ? <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Update</PublishButton> : <PublishButton className='button is-large is-primary' onClick={this.saveAndPublish.bind(this)}>Save & Publish</PublishButton> }
-            { (/editor\/\S+/.test(window.location.pathname)) ? <a className='button is-large is-info' style={{ margin: 10 }} href={`/${this.state.id}`}>View</a> : null}
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+              { this.state.published ? null : <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Save</PublishButton> }
+              { this.state.published ? <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Update</PublishButton> : <PublishButton className='button is-large is-primary' onClick={this.saveAndPublish.bind(this)}>Save & Publish</PublishButton> }
+              { (/editor\/\S+/.test(window.location.pathname)) ? <a className='button is-large is-info' style={{ margin: 10 }} href={`/${this.state.id}`}>View</a> : null}
+            </div>
           </EditorContainer>
-          <PreviewContainer className='level-right level-item' >
+          <PreviewContainer style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }} >
             { this.state.titleImg ? <TitleImage><img src={this.state.titleImg} /></TitleImage> : null }
             <TitlePreview className='content' ref={(ref) => { this._titlePreview = ref }}>{ this.state.title }</TitlePreview>
             { this.state.page ? null : <time dateTime={this.state.timestamp.format('YYYY-MM-DD')}>{ this.state.timestamp.format('MMMM Do, YYYY') }</time>}

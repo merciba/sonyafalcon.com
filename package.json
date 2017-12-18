@@ -58,6 +58,7 @@
     "redux": "^3.7.2",
     "sass-loader": "^6.0.3",
     "shelljs": "^0.7.7",
+    "showdown": "^1.8.5",
     "slugg": "^1.2.1",
     "styled-components": "^2.2.1",
     "toobusy-js": "^0.5.1",

@@ -5,7 +5,8 @@ const Promise = require('bluebird')
 const _ = require('lodash')
 const moment = require('moment')
 const handlebars = require('handlebars')
-const markdown = require('markdown').markdown
+const Converter = require('showdown').Converter
+const markdown = new Converter()
 const axios = require('axios')
 const AWS = require('aws-sdk')
 const sgMail = require('@sendgrid/mail')
@@ -37,8 +38,8 @@ const render = (post, timestamp, env) => {
     fs.readFile(`${__dirname}/post.hbs`, 'utf-8', (error, source) => {
       if (error) reject(error)
       var template = handlebars.compile(source)
-      let postHTML = markdown.toHTML(post.rawText)
-      post.html = postHTML
+      let postHTML = markdown.makeHtml(post.rawText)
+      post.html = new handlebars.SafeString(postHTML)
       post.summary = post.rawText.substring(0, 50)
       post.metaKeywords = post.tags.join()
       if (!post.page) {
@@ -161,7 +162,12 @@ const updatePost = (event, internal) => {
       }
       dynamodb.update(params, (err) => {
         if (err) reject(err)
-        else resolve({ msg: `Successfully updated post '${event.body.id}'` })
+        else {
+          getCloudFrontId()
+            .then(getDistributionConfig)
+            .then((res) => render(event.body, parseInt((res.DistributionConfig.DefaultRootObject.replace('index-', '')).replace('.html', '')), 'prod'))
+            .then(() => resolve({ msg: `Successfully updated post '${event.body.id}'` }))
+        }
       })
     }
     if (internal) update()

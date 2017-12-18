@@ -25,7 +25,6 @@ window.api = {
 window.cdn = 'https://s3.amazonaws.com/cdn.sonyafalcon.com'
 window.x = window.innerWidth
 window.y = window.innerHeight
-window.onresize = () => location.reload()
 window.getFirstWords = (sentence, n) => {
   let result = sentence
   let resultArray = result.split(' ')

@@ -39,7 +39,7 @@ yarn deploy
 
 This will package the client js and html files, prerender the posts/pages, version them, and upload them to S3, deploying the website to production.
 
-A CloudFront distribution is already set up to serve this bucket as a website, at http://.cloudfront.net, which the domain http://sonyafalcon.com points to.
+A CloudFront distribution is already set up to serve this bucket as a website, at http://d3w2usigm84dzd.cloudfront.net, which the domain https://sonyafalcon.com points to.
 
 Wait a few minutes and the site will update.
 

@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import _ from 'lodash'
-import { BackgroundImage, Title, BoldText, Text, Input, SubmitButton, ScrollContainer, FullScreenContainer } from './partials'
+import { BackgroundImage, Title, BoldText, Text, Input, SubmitButton, ScrollContainer, FullScreenContainer, FullScreenImage, Menu } from './partials'
+import { MENU, LOGO, HOME } from '../content.json'
 
 class Home extends Component {
   constructor (props) {
@@ -23,6 +24,8 @@ class Home extends Component {
         console.log(this.state.posts)
       })
       .catch(console.log)
+      window.onresize = () => this.forceUpdate()
+
   }
   onInputChange (e) {
     this.setState({ email: e.target.value })
@@ -38,24 +41,23 @@ class Home extends Component {
     return axios({ method: 'post', url: `${config.user}/newsletter/subscribe`, data: { email: this.state.email } })
       .catch(console.log)
   }
+  renderTitle (title) {
+    return <p style={{ height: 35, fontWeight: 'bold', color: '#FC5058', fontSize: 22, fontFamily: 'Montserrat', letterSpacing: 1, lineHeight: 26 }}>{title}</p>
+  }
   render () {
-    return env === 'dev'
-      ? (<FullScreenContainer >
-        <ScrollContainer
-          posts={this.state.posts} />
-      </FullScreenContainer>)
-      : (<section style={{ width: '100%', height: '100%' }}>
-        <BackgroundImage src={`${cdn}/2017/10/10/80440010.JPG`} />
-        <div className='hero' style={{ position: 'absolute', top: 0, left: 10, backgroundColor: 'transparent' }}>
-          <div className='hero-body' style={{ background: 'rgba(255, 255, 255, 0.8)', borderRadius: 10 }}>
-            <div className='container'>
-              <Title>Sonya Falcon</Title>
-              <hr />
-              <Text>Coming Soon</Text>
-            </div>
-          </div>
+    return <FullScreenContainer >
+        <FullScreenImage src={LOGO.url}/>
+        <img style={{ position: 'absolute', top: 15, left: 15 }} src={HOME.TOPLEFT}/>
+        <img style={{ position: 'absolute', top: 15, left: (window.innerWidth / 2) - (117 / 2) }} src={HOME.TOPCENTER}/>
+        <img style={{ position: 'absolute', top: 15, right: 15 }} src={HOME.TOPRIGHT}/>
+        <img style={{ position: 'absolute', bottom: 15, left: 15 }} src={HOME.BOTTOMLEFT}/>
+        <img style={{ position: 'absolute', bottom: 15, right: 15 }} src={HOME.BOTTOMRIGHT}/>
+        <img style={{ position: 'absolute', top: (window.innerHeight / 2) - 205, left: (window.innerWidth / 2) - (432 / 2) }} src={'https://s3.amazonaws.com/cdn.sonyafalcon.com/logo-landing.svg'} />
+        <div style={{ position: 'absolute', top: '30%', left: '58%' }}>
+          {HOME.TITLES.map(this.renderTitle)}
         </div>
-      </section>)
+        <Menu content={MENU}/>
+      </FullScreenContainer>
   }
 }
 
