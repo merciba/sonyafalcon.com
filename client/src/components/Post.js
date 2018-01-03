@@ -3,7 +3,7 @@ import axios from 'axios'
 import { markdownToHtml } from '../util'
 import moment from 'moment'
 import ShareButtons from './ShareButtons'
-import { Menu } from './partials'
+import { InteriorMenu } from './partials'
 import { MENU } from '../content.json'
 
 class Post extends Component {
@@ -33,7 +33,7 @@ class Post extends Component {
   }
   render () {
     return (<section className='section'>
-      <Menu content={MENU} ref='menu' />
+      <InteriorMenu content={MENU} ref='menu' />
       { (this.state && this.state.post) ? <div className='container' style={{ width: '100%' }}>
         <div style={{ overflow: 'hidden', height: 'auto', width: '100%', marginTop: 15 }}><img src={this.state.post.titleImg} /></div>
         <h1 className='title' style={{ marginTop: 15 }}>{ this.state.post.title }</h1>

@@ -42,7 +42,7 @@ class Home extends Component {
       .catch(console.log)
   }
   renderTitle (title) {
-    return <p style={{ height: 35, fontWeight: 'bold', color: '#FC5058', fontSize: 22, fontFamily: 'Montserrat', letterSpacing: 1, lineHeight: 26 }}>{title}</p>
+    return <p style={{ height: 35, fontWeight: 'bold', color: '#FC5058', fontSize: 18, fontFamily: 'Ubuntu Mono', letterSpacing: 1, lineHeight: 26 }}>{title}</p>
   }
   render () {
     return <FullScreenContainer >
@@ -53,7 +53,7 @@ class Home extends Component {
         <img style={{ position: 'absolute', bottom: 15, left: 15 }} src={HOME.BOTTOMLEFT}/>
         <img style={{ position: 'absolute', bottom: 15, right: 15 }} src={HOME.BOTTOMRIGHT}/>
         <img style={{ position: 'absolute', top: (window.innerHeight / 2) - 205, left: (window.innerWidth / 2) - (432 / 2) }} src={'https://s3.amazonaws.com/cdn.sonyafalcon.com/logo-landing.svg'} />
-        <div style={{ position: 'absolute', top: '30%', left: '58%' }}>
+        <div style={{ position: 'absolute', top: '32%', width: '100%', textAlign: 'center' }}>
           {HOME.TITLES.map(this.renderTitle)}
         </div>
         <Menu content={MENU}/>

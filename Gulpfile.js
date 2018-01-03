@@ -35,7 +35,7 @@ gulp.task('browser-sync', function () {
 })
 
 gulp.task('watch', function () {
-  gulp.watch(['client/src/*.js', 'client/src/**/*.js'], function () {
+  gulp.watch(['client/src/*.js', 'client/src/**/*.js', 'client/src/**/*.json'], function () {
     runSequence('build', 'handlebars', 'server')
   })
 })

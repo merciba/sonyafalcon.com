@@ -6,7 +6,7 @@ import { markdown } from 'markdown'
 import { ButtonsContainer } from './partials'
 import Notifications, { notify } from 'react-notify-toast'
 import Loader from './Loader'
-import { Menu } from './partials'
+import { InteriorMenu } from './partials'
 import { MENU } from '../content.json'
 
 class Dashboard extends Component {
@@ -79,7 +79,7 @@ class Dashboard extends Component {
   render () {
     return (this.state.posts ? <section className='section' style={{ height: window.innerHeight }}>
       <Notifications />
-      <Menu content={MENU} />
+      <InteriorMenu content={MENU} />
       <div style={{ marginTop: 120 }}>
         <h1 className='title'>Dashboard</h1>
         <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', width: '100%', height: '100%' }}>

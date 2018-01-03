@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { EDITOR } from '../../content.json'
 
 export const Input = styled.input`
   display: block;
@@ -15,9 +16,7 @@ export const Dropdown = ({ value, onChange }) => (
     <div className="control">
       <div className="select">
         <select defaultValue={value} onChange={onChange}>
-          <option value='Travel'>✈️ Travel</option>
-          <option value='Tech'>💻 Tech</option>
-          <option value='Style'>🕶 Style</option>
+          {EDITOR.CATEGORIES.map(category => <option value={category}>{category}</option>)}
         </select>
       </div>
     </div>

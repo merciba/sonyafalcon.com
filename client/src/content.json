@@ -6,67 +6,109 @@
     "BOTTOMLEFT": "https://s3.amazonaws.com/cdn.sonyafalcon.com/wingding-02.svg",
     "BOTTOMRIGHT": "https://s3.amazonaws.com/cdn.sonyafalcon.com/wingding-01.svg",
     "TITLES": [
-      "Product Designer",
-      "Art Director",
-      "Artist"
+      "♦ coming soon ♦"
     ]  
   },
   "LOGO": {
     "url": "https://s3.amazonaws.com/cdn.sonyafalcon.com/2017/12/17/landing-bkg-desktop-01.jpg"
   },
+
   "MENU": {
+    "PLACEHOLDER": [
+      {
+        "title": "Merciba",
+        "url": "http://merciba.com",
+        "target": "_blank",
+        "color": "#ABE7FF",
+        "width": 280,
+        "type": "Link"
+      },
+    
+      {
+        "title": "Request work samples",
+        "url": "mailto:sonya@merciba.com",
+        "target": "_blank",
+        "color": "#FF696B",
+        "width": 280,
+        "type": "Link"
+      }
+    ],
+
     "ITEMS": [
       {
         "title": "Case Studies",
         "url": "/case-studies",
         "color": "#ABE7FF",
-        "width": 280
+        "width": 280,
+        "type": "Link",
+        "target": "_self"
       },
       {
         "title": "Projects",
         "url": "/projects",
         "color": "#ABE7FF",
-        "width": "auto"
+        "width": "auto",
+        "type": "Link",
+        "target": "_self"
       },
       {
         "title": "Merciba",
         "url": "http://merciba.com",
         "color": "#ABE7FF",
-        "width": "auto"
+        "width": "auto",
+        "type": "Link",
+        "target": "_blank"
       },
       {
         "title": "",
         "url": "",
         "color": "",
-        "width": "auto"
+        "width": "auto",
+        "type": "Text",
+        "target": "_self"
       },
       {
         "title": "",
         "url": "",
         "color": "",
-        "width": "auto"
+        "width": "auto",
+        "type": "Text",
+        "target": "_self"
       },
       {
         "title": "Blog",
         "url": "/blog",
         "color": "#FF696B",
-        "width": "auto"
+        "width": "auto",
+        "type": "Link",
+        "target": "_self"
       },
       {
         "title": "About",
         "url": "/about",
         "color": "#FF696B",
-        "width": "auto"
+        "width": "auto",
+        "type": "Link",
+        "target": "_self"
       },
       {
         "title": "Contact",
         "url": "/contact",
         "color": "#FF696B",
-        "width": "auto"
+        "width": "auto",
+        "type": "Link",
+        "target": "_self"
       }
     ]
   },
   "FOOTER": {
-    "LEFT": "© 2017 Merciba LLC. All rights reserved."
+    "LEFT": "© 2018 Sonya Falcon. All rights reserved."
+  },
+  "EDITOR": {
+    "CATEGORIES": [
+      "Projects",
+      "Case Studies",
+      "Blog"
+    ]
   }
 }

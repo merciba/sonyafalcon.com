@@ -11,6 +11,7 @@ import MediaLibraryModal from './MediaLibraryModal'
 import DatePicker from 'react-datepicker'
 import Notifications, { notify } from 'react-notify-toast'
 import slug from 'slugg'
+import { EDITOR } from '../content.json'
 
 import {
   TitleInput,
@@ -52,7 +53,7 @@ class StatefulEditor extends Component {
           return axios({ method: 'put', url: res.data.body, headers: { 'Content-Type': file.type }, data: file })
         })
         .then(() => {
-          let uploadedFileUrl = `https://cdn.sonyafalcon.com.s3.amazonaws.com/${filename}`
+          let uploadedFileUrl = `https://s3.amazonaws.com/cdn.sonyafalcon.com/${filename}`
           let rawText = `${this.state.value} ![image alt](${uploadedFileUrl})`
           this.setState({ value: rawText, editorValue: rawText })
           this.props.onChange(rawText)
@@ -93,7 +94,7 @@ class PostEditor extends Component {
       titleImg: '',
       page: false,
       author: user.email,
-      category: 'Travel',
+      category: EDITOR.CATEGORIES[0],
       timestamp: moment(),
       tags: [],
       published: false,
