@@ -9,11 +9,13 @@ import PostEditor from './components/PostEditor.js'
 import Login from './components/Login.js'
 import Post from './components/Post.js'
 import ErrorPage from './components/ErrorPage.js'
+import { screenIs } from './components/partials'
 
 import axios from 'axios'
 import { noMatch } from './utils'
 import Promise from 'bluebird'
 import $ from 'jquery'
+import screenOrientation from 'screen-orientation'
 
 window.env = $('[data-env]').data('env')
 window.config = require(`./api.js`)
@@ -43,6 +45,7 @@ class App extends Component {
     this.state = {
       authenticated: false
     }
+    window.onresize = () => this.forceUpdate()
   }
   authenticate () {
     return new Promise((resolve, reject) => {
@@ -60,7 +63,7 @@ class App extends Component {
     })
   }
   render () {
-    return (<div style={{ height: window.innerHeight, fontFamily: 'Work Sans, sans-serif' }}>
+    return (screenIs('mobile') && ((screenOrientation()).direction === 'landscape')) ? (<div style={{ width: '100%', height: '100%' }}>Landscape orientation is not supported on this device. Please rotate back to portrait mode.</div>) : (<div style={{ height: window.innerHeight, fontFamily: 'Work Sans, sans-serif' }}>
       <Router regex='^\/$' path='/'><Home /></Router>
       <Router regex='/login$' path='/login'><Login /></Router>
       <Router regex='/dashboard$' path='/dashboard' protected><Dashboard authenticate={this.authenticate.bind(this)} /></Router>

@@ -20,7 +20,7 @@
         "url": "http://merciba.com",
         "target": "_blank",
         "color": "#ABE7FF",
-        "width": 280,
+        "width": "100%",
         "type": "Link"
       },
     
@@ -29,17 +29,17 @@
         "url": "mailto:sonya@merciba.com",
         "target": "_blank",
         "color": "#FF696B",
-        "width": 280,
+        "width": "100%",
         "type": "Link"
       }
     ],
 
-    "ITEMS": [
+    "LEFT": [
       {
         "title": "Case Studies",
         "url": "/case-studies",
         "color": "#ABE7FF",
-        "width": 280,
+        "width": "40%",
         "type": "Link",
         "target": "_self"
       },
@@ -47,7 +47,7 @@
         "title": "Projects",
         "url": "/projects",
         "color": "#ABE7FF",
-        "width": "auto",
+        "width": "30%",
         "type": "Link",
         "target": "_self"
       },
@@ -55,31 +55,18 @@
         "title": "Merciba",
         "url": "http://merciba.com",
         "color": "#ABE7FF",
-        "width": "auto",
+        "width": "25%",
         "type": "Link",
         "target": "_blank"
-      },
-      {
-        "title": "",
-        "url": "",
-        "color": "",
-        "width": "auto",
-        "type": "Text",
-        "target": "_self"
-      },
-      {
-        "title": "",
-        "url": "",
-        "color": "",
-        "width": "auto",
-        "type": "Text",
-        "target": "_self"
-      },
+      }
+    ],
+
+    "RIGHT": [
       {
         "title": "Blog",
         "url": "/blog",
         "color": "#FF696B",
-        "width": "auto",
+        "width": "30%",
         "type": "Link",
         "target": "_self"
       },
@@ -87,7 +74,7 @@
         "title": "About",
         "url": "/about",
         "color": "#FF696B",
-        "width": "auto",
+        "width": "30%",
         "type": "Link",
         "target": "_self"
       },
@@ -95,7 +82,7 @@
         "title": "Contact",
         "url": "/contact",
         "color": "#FF696B",
-        "width": "auto",
+        "width": "40%",
         "type": "Link",
         "target": "_self"
       }

@@ -20,7 +20,6 @@ webapp.start({
   middleware: {
     '/*': function * (next) {
       let contentType = mime.lookup(this.request.url)
-      if (/favicon/.test(this.request.url)) console.log(contentType)
       if (!contentType) {
         if (/\.woff/.test(this.request.url)) contentType = 'application/font-woff'
         if (/\.ttf|\.otf/.test(this.request.url)) contentType = 'application/font-sfnt'
