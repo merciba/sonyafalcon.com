@@ -5,7 +5,6 @@ import { MENU } from '../content.json'
 class ErrorPage extends Component {
   render () {
     return (<section className='section'>
-      <Menu content={MENU} />
       <div className='hero'>
         <div className='hero-body'>
           <div className='container'>

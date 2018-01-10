@@ -64,3 +64,34 @@ export const Tag = styled.span`
   font-size: 1rem;
   color: black;
 `
+
+export const PostTitle = styled.h1`
+  height: 28px;
+  width: 100%;
+  padding-left: 15px;
+  color: #000000;
+  font-family: "acumin-pro-semi-condensed",sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 28px;
+`
+
+export const PostSubCategory = styled.h1`
+  height: 28px;
+  width: 100%;
+  padding-left: 15px;
+  color: #000000;
+  font-family: "Ubuntu Mono";
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 15px;
+`
+
+export const PostContent = styled.div`
+  margin-top: 15px;
+  padding: 15px;
+  font-size: 18px;
+  line-height: 28px;
+  font-family: "acumin-pro-semi-condensed",sans-serif;
+`

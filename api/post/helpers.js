@@ -121,6 +121,7 @@ const createPost = (event) => {
             page: event.body.page,
             author: res.data.body.user.email,
             category: event.body.category,
+            subcategory: event.body.subcategory,
             timestamp: event.body.timestamp,
             titleImg: event.body.titleImg,
             rawText: event.body.rawText,
@@ -147,11 +148,12 @@ const updatePost = (event, internal) => {
           id: event.body.id,
           timestamp: event.body.timestamp
         },
-        UpdateExpression: 'set title = :title, page = :page, titleImg = :titleImg, rawText = :rawText, category = :category, scheduled = :scheduled, tags = :tags, published = :published',
+        UpdateExpression: 'set title = :title, page = :page, titleImg = :titleImg, rawText = :rawText, category = :category, subcategory = :subcategory, scheduled = :scheduled, tags = :tags, published = :published',
         ExpressionAttributeValues: {
           ':title': event.body.title,
           ':page': event.body.page,
           ':category': event.body.category,
+          ':subcategory': event.body.subcategory,
           ':titleImg': event.body.titleImg,
           ':rawText': event.body.rawText,
           ':scheduled': event.body.scheduled,

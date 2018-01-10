@@ -69,8 +69,9 @@ class App extends Component {
       <Router regex='/dashboard$' path='/dashboard' protected><Dashboard authenticate={this.authenticate.bind(this)} /></Router>
       <Router regex='/editor$' path='/editor' protected><PostEditor authenticate={this.authenticate.bind(this)} /></Router>
       <Router regex='/editor\/\S+$' path='/editor/:id' protected><PostEditor authenticate={this.authenticate.bind(this)} /></Router>
+      <Router regex='/case-studies$' path='/case-studies'><Post /></Router>
       <Router regex='/error$' path='/error'><ErrorPage /></Router>
-      <Router regex='/\S+$' path='/:id' protected><Post /></Router>
+      <Router regex='/\S+$' path='/:id'><Post /></Router>
     </div>)
   }
 }

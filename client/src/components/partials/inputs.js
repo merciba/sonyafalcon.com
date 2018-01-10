@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { EDITOR } from '../../content.json'
 
 export const Input = styled.input`
   display: block;
@@ -11,12 +10,12 @@ export const Input = styled.input`
   background-color: #eeeeee;
 `
 
-export const Dropdown = ({ value, onChange }) => (
+export const Dropdown = ({ value, onChange, content }) => (
   <div className="field" style={{ flex: 1 }}>
     <div className="control">
       <div className="select">
         <select defaultValue={value} onChange={onChange}>
-          {EDITOR.CATEGORIES.map(category => <option value={category}>{category}</option>)}
+          {content.map(category => <option key={category} value={category}>{category}</option>)}
         </select>
       </div>
     </div>

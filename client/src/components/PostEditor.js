@@ -95,6 +95,7 @@ class PostEditor extends Component {
       page: false,
       author: user.email,
       category: EDITOR.CATEGORIES[0],
+      subcategory: EDITOR.SUBCATEGORIES[0],
       timestamp: moment(),
       tags: [],
       published: false,
@@ -185,6 +186,9 @@ class PostEditor extends Component {
   changeCategory (e) {
     this.setState({ category: e.currentTarget.value })
   }
+  changeSubCategory (e) {
+    this.setState({ subcategory: e.currentTarget.value })
+  }
   changeDate (scheduled) {
     this.setState({ scheduled })
   }
@@ -199,7 +203,7 @@ class PostEditor extends Component {
     if (imgUrl) this.setState({ titleImg: imgUrl })
   }
   save () {
-    let { id, title, tags, timestamp, scheduled, category, titleImg, rawText, page, published } = this.state
+    let { id, title, tags, timestamp, scheduled, category, subcategory, titleImg, rawText, page, published } = this.state
     if (id && title && rawText && category) {
       let post = {
         id,
@@ -209,6 +213,7 @@ class PostEditor extends Component {
         rawText,
         page,
         category,
+        subcategory,
         scheduled: scheduled.isBefore('second') ? null : scheduled.utc().format(),
         published,
         timestamp: timestamp.utc().format()
@@ -279,7 +284,9 @@ class PostEditor extends Component {
             <SmallText>Slug: /{this.state.id}</SmallText>
             <FlexContainer>
               <label className="label" style={{ flex: 0.3 }}>Category</label>
-              <Dropdown value={this.state.category} onChange={this.changeCategory.bind(this)} />
+              <Dropdown content={EDITOR.CATEGORIES} value={this.state.category} onChange={this.changeCategory.bind(this)} />
+              <label className="label" style={{ flex: 0.3 }}>Sub-Category</label>
+              <Dropdown content={EDITOR.SUBCATEGORIES} value={this.state.subcategory} onChange={this.changeSubCategory.bind(this)} />
               <SwitchButton
                 style={{ flex: 1 }}
                 id='page'

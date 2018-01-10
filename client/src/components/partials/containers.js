@@ -99,6 +99,10 @@ export const ComingSoon = styled.div`
   text-align: center;
 `
 
+export const PostContainer = styled.div`
+  padding: 15px;
+`
+
 export const Footer = () => (
   <footer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'absolute', bottom: 0, background: 'white', width: '100%', height: 80 }}>
     <a href="http://merciba.com"><span style={{ fontSize: 15, color: 'black', flex: 1, marginLeft: 30 }}>{FOOTER.LEFT}</span></a>

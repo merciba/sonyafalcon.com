@@ -43,7 +43,7 @@ class Home extends Component {
   }
   render () {
     return <FullScreenContainer>
-      <FullScreenImage src={LOGO.url} />
+      <FullScreenImage src={screenIs('mobile') ? LOGO.url.mobile : LOGO.url.desktop} />
       <TopLeftWidget src={HOME.TOPLEFT} />
       <TopCenterWidget src={HOME.TOPCENTER} />
       <TopRightWidget src={HOME.TOPRIGHT} />

@@ -10,9 +10,11 @@
     ]  
   },
   "LOGO": {
-    "url": "https://s3.amazonaws.com/cdn.sonyafalcon.com/2017/12/17/landing-bkg-desktop-01.jpg"
+    "url": {
+      "desktop": "https://s3.amazonaws.com/cdn.sonyafalcon.com/landing-bkg-desktop-01.jpg",
+      "mobile": "https://s3.amazonaws.com/cdn.sonyafalcon.com/landing-bkg-mobile-01.jpg"
+    }
   },
-
   "MENU": {
     "PLACEHOLDER": [
       {
@@ -95,7 +97,18 @@
     "CATEGORIES": [
       "Projects",
       "Case Studies",
-      "Blog"
+      "Blog",
+      "About",
+      "Contact"
+    ],
+    "SUBCATEGORIES": [
+      "None",
+      "Product Design",
+      "Web Design",
+      "Brand Design",
+      "UI Design",
+      "Apparel Design",
+      "Print Design"
     ]
   }
 }
