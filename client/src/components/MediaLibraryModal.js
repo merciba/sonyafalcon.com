@@ -9,7 +9,7 @@ class MediaLibraryModal extends Component {
     this.state = {
       media: [],
       modalClass: props.modalClass,
-      chosenMedia: ''
+      chosenMedia: []
     }
     this.images = {}
   }
@@ -32,10 +32,17 @@ class MediaLibraryModal extends Component {
       })
   }
   selectMedia (image) {
-    this.state.media.map((item) => {
-      this.setState({ [item.Key[0]]: { maxHeight: 120, width: 'auto', margin: 5, border: 'none' }, chosenMedia: '' })
-    })
-    this.setState({ [image.Key[0]]: { maxHeight: 120, width: 'auto', margin: 5, border: '5px dashed #aaeeaa' }, chosenMedia: `${window.cdn}/${image.Key[0]}` })
+    let { chosenMedia } = this.state
+    /* this.state.media.map((item) => {
+      this.setState({ [item.Key[0]]: { maxHeight: 120, width: 'auto', margin: 5, border: 'none' }, chosenMedia: [] })
+    }) */
+    if (_.find(chosenMedia, `${window.cdn}/${image.Key[0]}`)) {
+      _.remove(chosenMedia, `${window.cdn}/${image.Key[0]}`)
+      this.setState({ [image.Key[0]]: { maxHeight: 120, width: 'auto', margin: 5, border: 'none' }, chosenMedia })
+    } else {
+      chosenMedia.push(`${window.cdn}/${image.Key[0]}`)
+      this.setState({ [image.Key[0]]: { maxHeight: 120, width: 'auto', margin: 5, border: '5px dashed #aaeeaa' }, chosenMedia })
+    }
   }
   renderMedia () {
     return this.state.media.map((item) => {
@@ -50,14 +57,14 @@ class MediaLibraryModal extends Component {
       <div className='modal-card'>
         <header className='modal-card-head'>
           <p className='modal-card-title'>Choose Media</p>
-          <button className='delete' aria-label='close' onClick={() => this.props.closeModal(this.state.chosenMedia)} />
+          <button className='delete' aria-label='close' onClick={() => this.props.closeModal()} />
         </header>
         <section className='modal-card-body' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
           {this.renderMedia()}
         </section>
         <footer className='modal-card-foot'>
           <button className='button is-success' onClick={() => this.props.closeModal(this.state.chosenMedia)}>Choose</button>
-          <button className='button' onClick={this.props.closeModal}>Cancel</button>
+          <button className='button' onClick={() => this.props.closeModal()}>Cancel</button>
         </footer>
       </div>
     </div>

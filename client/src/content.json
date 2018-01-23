@@ -95,6 +95,7 @@
   },
   "EDITOR": {
     "CATEGORIES": [
+      "Category",
       "Projects",
       "Case Studies",
       "Blog",
@@ -102,7 +103,7 @@
       "Contact"
     ],
     "SUBCATEGORIES": [
-      "None",
+      "Sub-Category",
       "Product Design",
       "Web Design",
       "Brand Design",

@@ -19,10 +19,10 @@ class ShareButtons extends Component {
   }
   render () {
     return (<ul style={{ listStyle: 'none', padding: 0, height: 100 }}>
-      <li style={{ display: 'inline' }}><a className='button btn-facebook' style={{ color: 'white', marginRight: 15 }} target="_blank" title="Tweet" onClick={this.shareToFacebook.bind(this)}>Share&nbsp;&nbsp;<i className="fa fa-facebook" aria-hidden="true"></i></a></li>
-      <li style={{ display: 'inline' }}><a className='button btn-tweet' style={{ color: 'white', marginRight: 15 }} target="_blank" title="Tweet" onClick={this.shareToTwitter.bind(this)}>Share&nbsp;&nbsp;<i className="fa fa-twitter" aria-hidden="true"></i></a></li>
-      <li style={{ display: 'inline' }}><a className='button btn-google' style={{ color: 'white', marginRight: 15 }} target="_blank" title="Share on Google+" onClick={this.shareToGoogle.bind(this)}>Share&nbsp;&nbsp;<i className="fa fa-google" aria-hidden="true"></i></a></li>
-      <li style={{ display: 'inline' }}><a className='button btn-pinterest' style={{ color: 'white', marginRight: 15 }} target="_blank" title="Save to Pinboard" onClick={this.shareToPinterest.bind(this)}>Share&nbsp;&nbsp;<i className="fa fa-pinterest" aria-hidden="true"></i></a></li>
+      <li style={{ display: 'inline' }}><a className='button btn-facebook' style={{ color: 'white', marginRight: 15 }} target='_blank' title='Tweet' onClick={this.shareToFacebook.bind(this)}>Share&nbsp;&nbsp;<i className='fa fa-facebook' aria-hidden='true' /></a></li>
+      <li style={{ display: 'inline' }}><a className='button btn-tweet' style={{ color: 'white', marginRight: 15 }} target='_blank' title='Tweet' onClick={this.shareToTwitter.bind(this)}>Share&nbsp;&nbsp;<i className='fa fa-twitter' aria-hidden='true' /></a></li>
+      <li style={{ display: 'inline' }}><a className='button btn-google' style={{ color: 'white', marginRight: 15 }} target='_blank' title='Share on Google+' onClick={this.shareToGoogle.bind(this)}>Share&nbsp;&nbsp;<i className='fa fa-google' aria-hidden='true' /></a></li>
+      <li style={{ display: 'inline' }}><a className='button btn-pinterest' style={{ color: 'white', marginRight: 15 }} target='_blank' title='Save to Pinboard' onClick={this.shareToPinterest.bind(this)}>Share&nbsp;&nbsp;<i className='fa fa-pinterest' aria-hidden='true' /></a></li>
     </ul>)
   }
 }

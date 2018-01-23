@@ -1,19 +1,13 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { AddContentContainer, AddTextButton, AddMediaButton } from './index'
 
 export const TitleInput = styled.input`
-
+  font-size: 36px;
+  height: 45px;
+  margin-top: 0;
+  display: block;
 `
-
-export class Scheduler extends Component {
-  render () {
-    return <button
-      className='button is-primary'
-      onClick={this.props.onClick}>
-      Scheduled for: {this.props.value}
-    </button>
-  }
-}
 
 export const TitleImage = styled.div`
   overflow: hidden;
@@ -49,6 +43,7 @@ export const Notification = styled.p`
   font-size: 12px;
 `
 
-export const PublishButton = styled.a`
-   margin: 10px 10px 0 0;
-`
+export const AddContent = ({ onTextClick, onImageClick }) => (<AddContentContainer>
+  <AddTextButton onClick={onTextClick} />
+  <AddMediaButton onClick={onImageClick} />
+</AddContentContainer>)

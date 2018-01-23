@@ -18,7 +18,7 @@ class Login extends Component {
   }
   error (err) {
     console.log(err)
-    //window.location.href = '/login'
+    // window.location.href = '/login'
   }
   render () {
     return (<section className='section' style={{ height: '100%' }}>

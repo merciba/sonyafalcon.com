@@ -291,3 +291,22 @@ export class InteriorSubMenu extends Component {
     </InteriorSubMenuContainer>)
   }
 }
+
+export class PrivateSubMenu extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      links: [{ id: 'dashboard', title: 'Dashboard' }, { id: 'editor', title: 'New Post' }, ...props.posts],
+      post: { id: (window.location.pathname === '/editor') ? 'editor' : ((window.location.pathname === '/dashboard') ? 'dashboard' : window.location.pathname.replace('/editor/', '')) }
+    }
+    this.renderLinks = this.renderLinks.bind(this)
+  }
+  renderLinks (item) {
+    return <InteriorSubMenuLink target='_self' key={item.title} href={`/${item.id}`} style={{ color: (item.id === this.state.post.id) ? '#FF696B' : '#262A3B', padding: 10 }}><span style={{ lineHeight: 'auto' }}>{item.title}</span></InteriorSubMenuLink>
+  }
+  render () {
+    return (<InteriorSubMenuContainer>
+      {this.state.links.map(this.renderLinks)}
+    </InteriorSubMenuContainer>)
+  }
+}

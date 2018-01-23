@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import ReactDOMServer from 'react-dom/server'
 import axios from 'axios'
+import _ from 'lodash'
 import { markdownToHtml } from '../util'
 import moment from 'moment'
 import Dropzone from 'react-dropzone'
@@ -11,7 +13,8 @@ import MediaLibraryModal from './MediaLibraryModal'
 import DatePicker from 'react-datepicker'
 import Notifications, { notify } from 'react-notify-toast'
 import slug from 'slugg'
-import { EDITOR } from '../content.json'
+import { EDITOR, MENU } from '../content.json'
+const set = (n, ins, arr) => [...arr.slice(0, n), ins, ...arr.slice(n)]
 
 import {
   TitleInput,
@@ -24,197 +27,227 @@ import {
   PublishButton,
   Dropdown,
   SmallText,
-  FlexContainer
+  FlexContainer,
+  PostMarkup,
+  PostDetails,
+  PostDetailsContainer,
+  PostDetailsTitle,
+  PostDetailsDescription,
+  PostDetailsLine,
+  PostDetailsEdit,
+  PostDetailsEditTitle,
+  PostDetailsEditDescription,
+  PostDetailsEditSubmit,
+  MediaInput,
+  MarkdownInput,
+  AddContent,
+  HeaderImage,
+  PostContainer,
+  PostTitle,
+  PostSubCategory,
+  PostContent,
+  ImageSection,
+  InteriorMenu,
+  PrivateSubMenu,
+  DateInput
 } from './partials'
-
-class StatefulEditor extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      value: props.default,
-      editorValue: props.default
-    }
-  }
-
-  componentWillUnmount () {
-    this.state.files.forEach((file) => window.URL.revokeObjectURL(file.preview))
-  }
-
-  onChange (e) {
-    this.setState({ value: e.target.value, editorValue: e.target.value })
-    if (this.props.onChange) this.props.onChange(e.target.value)
-  }
-
-  onDrop (files) {
-    files.forEach((file) => {
-      let filename = `${moment().utc().format('YYYY/MM/DD')}/${file.name}`
-      axios({ method: 'get', url: `${window.config.post}/getUploadCredentials?filename=${filename}&type=${file.type}`, headers: { 'Authorization': window.localStorage.getItem('id_token') } })
-        .then((res) => {
-          return axios({ method: 'put', url: res.data.body, headers: { 'Content-Type': file.type }, data: file })
-        })
-        .then(() => {
-          let uploadedFileUrl = `https://s3.amazonaws.com/cdn.sonyafalcon.com/${filename}`
-          let rawText = `${this.state.value} ![image alt](${uploadedFileUrl})`
-          this.setState({ value: rawText, editorValue: rawText })
-          this.props.onChange(rawText)
-          this.props.onUploadImage(uploadedFileUrl)
-          notify.show(`File uploaded. Access it at ${uploadedFileUrl}`, 'success')
-        })
-        .catch((err) => {
-          console.log(err)
-          notify.show('Internal Server Error', 'error')
-        })
-    })
-  }
-
-  render () {
-    return (
-      <div className='container' style={{ ...this.props.style, marginTop: 10, marginBottom: 10 }}>
-        <Dropzone disableClick style={this.props.style} onDrop={this.onDrop.bind(this)}>
-          <textarea
-            style={this.props.style}
-            value={this.state.editorValue}
-            onChange={this.onChange.bind(this)}
-          />
-        </Dropzone>
-      </div>
-    )
-  }
-}
 
 class PostEditor extends Component {
   constructor (props) {
     super(props)
     let user = JSON.parse(window.localStorage.getItem('user'))
     this.state = {
-      content: <Loader />,
+      loading: true,
+      addNewContent: <AddContent onTextClick={() => this.selectNewContent('markdown')} onImageClick={() => this.selectNewContent('image')} />,
       id: '',
       title: '',
-      rawText: '',
+      layout: [],
       titleImg: '',
       page: false,
       author: user.email,
-      category: EDITOR.CATEGORIES[0],
-      subcategory: EDITOR.SUBCATEGORIES[0],
+      category: 'Category',
+      subcategory: 'Sub-Category',
+      details: [],
+      detailsEditTitle: '',
+      detailsEditDescription: '',
       timestamp: moment(),
+      dates: ['2018', '2018'],
       tags: [],
+      posts: [],
       published: false,
       scheduled: moment(),
+      toDate: parseInt(moment().format('YYYY')),
+      fromDate: parseInt(moment().format('YYYY')),
       html: '',
-      files: [],
-      textAreaHeight: window.innerHeight * 0.65,
-      editor: null,
-      isModalOpen: 'modal'
+      dragging: false,
+      mousePostiion: { x: 0, y: 0 }
     }
+    this._sections = []
+    this.notify = this.notify.bind(this)
+    this.startDrag = this.startDrag.bind(this)
+    this.endDrag = this.endDrag.bind(this)
     this.changeDate = this.changeDate.bind(this)
   }
   componentDidMount () {
     this.props.authenticate()
+      .then(this.getPosts)
+      .then((res) => {
+        this.setState({ posts: res.data.body })
+      })
       .then(() => {
-        /* Do nothing */
-        let previewHeight = this._preview.clientHeight
-        this.setState({ textAreaHeight: previewHeight > 500 ? previewHeight : 500, author: (window.localStorage.getItem('user')).email })
         if (/editor\/\S+/.test(window.location.pathname)) {
           window.localStorage.setItem('currentDraft', null)
           let id = window.location.pathname.replace('/editor/', '')
-          this.getPost(id)
-            .then((res) => {
-              let currentDraft = res.data.body[0]
-              window.localStorage.setItem('currentDraft', JSON.stringify(currentDraft))
-              currentDraft.scheduled = moment(currentDraft.scheduled).local()
-              currentDraft.timestamp = moment(currentDraft.timestamp)
-              this.setState(currentDraft)
-              this.initEditor()
-              this._title.value = this.state.title
-              this.changeBody(this.state.rawText)
-            })
+          return this.getPost(id)
+            .then((res) => this.init(res.data.body[0]))
         } else {
           window.localStorage.setItem('currentDraft', null)
-          this.initEditor()
+          return this.init()
         }
       })
       .catch((err) => {
-        //window.location.replace('/login')
+        console.log(err)
+        // window.location.replace('/login')
       })
-    setInterval(this.saveDraft.bind(this), 15000)
-
-    if (this._preview) this._preview.innerHTML = markdownToHtml(this.state.rawText)
   }
-  initEditor () {
-    this.setState({ editor: <StatefulEditor style={{ borderWidth: 0, fontSize: 16, borderRadius: 2, backgroundColor: '#eeeeee', fontFamily: 'Courier New', fontWeight: 'bold', width: '100%', height: this.state.textAreaHeight }} onUploadImage={this.onUploadImage.bind(this)} default={this.state.rawText} notify={notify.show} onChange={this.changeBody.bind(this)} /> })
+
+  init (post) {
+    if (post) {
+      window.localStorage.setItem('currentDraft', JSON.stringify(post))
+      post.scheduled = moment(post.scheduled).local()
+      post.timestamp = moment(post.timestamp)
+      post.fromDate = post.dates[0]
+      post.toDate = post.dates[1]
+      delete post.dates
+      this.setState(post, () => this.setState({ loading: false }))
+      this._title.value = this.state.title
+    }
+    else this.setState({ loading: false })
   }
   getPost (id) {
     return axios({ method: 'get', url: `${window.config.post}/${id}` })
   }
-  onDrop (files) {
-    files.forEach((file) => {
-      let filename = `${moment().utc().format('YYYY/MM/DD')}/${file.name}`
-      axios({ method: 'get', url: `${window.config.post}/getUploadCredentials?filename=${filename}&type=${file.type}`, headers: { 'Authorization': window.localStorage.getItem('id_token') } })
-        .then((res) => {
-          return axios({ method: 'put', url: res.data.body, headers: { 'Content-Type': file.type }, data: file })
-        })
-        .then(() => {
-          let uploadedFileUrl = `${window.cdn}/${filename}`
-          let rawText = `${this.state.value} ![image alt](${uploadedFileUrl})`
-          this.setState({ rawText })
-          this.onUploadImage(uploadedFileUrl)
-          notify.show(`File uploaded. Access it at ${uploadedFileUrl}`, 'success')
-        })
-        .catch(console.log)
-    })
+  getPosts () {
+    return axios({ method: 'get', url: `${window.config.post}` })
   }
-  onUploadImage (imageUrl) {
-    if (!this.state.titleImg.length) this.setState({ titleImg: imageUrl })
+  onUploadTtileImage (imageUrls) {
+    console.log('onUploadTitleImage', imageUrls)
+    this.setState({ titleImg: imageUrls[0] })
+    this.updateHtml()
   }
-  saveDraft () {
-    let { id, title, author, tags, rawText, titleImg, category, timestamp } = this.state
-    window.localStorage.setItem('currentDraft', JSON.stringify({ id, title, author, tags, rawText, titleImg, category, timestamp: timestamp.utc().format() }))
-    notify.show('Draft autosaved.', 'success')
+  onUploadImage ({ index, src }) {
+    let layout = [...this.state.layout]
+    if (layout[index] && layout[index].src.length) layout[index] = { type: 'image', src: layout[index].src.concat(src) }
+    else layout[index] = { type: 'image', src }
+    this.setState({ layout })
+    this.updateHtml()
   }
   changeTitle (e) {
     this.setState({ title: e.target.value, id: slug(e.target.value) })
     this._title.value = e.target.value
-    if (this._titlePreview) this._titlePreview.innerHTML = e.target.value
+    this.updateHtml()
   }
-  changeBody (rawText) {
-    let html = markdownToHtml(rawText)
-    this.setState({ rawText, html })
-    let previewHeight = this._preview.clientHeight
-    this.setState({ textAreaHeight: previewHeight > 500 ? previewHeight : 500 })
-    if (this._preview) this._preview.innerHTML = html
+  onTextChange ({ index, src }) {
+    let layout = [...this.state.layout]
+    layout[index] = { type: 'markdown', src }
+    this.setState({ layout })
+    this.updateHtml()
+  }
+  selectNewContent (type) {
+    let layout = [...this.state.layout]
+    let src
+    if (type === 'image') src = []
+    else if (type === 'markdown') src = ''
+    layout.push({ type, src })
+    this.setState({ layout, addNewContent: <AddContent onTextClick={() => this.selectNewContent('markdown')} onImageClick={() => this.selectNewContent('image')} /> })
+    this.updateHtml()
+  }
+  removeSection (index) {
+    let layout = Object.assign([], this.state.layout)
+    _.remove(layout, (section, i) => index === i)
+    this.setState({ layout })
+    this.updateHtml()
+  }
+  startDrag (index) {
+    this.setState({ dragging: this.state.layout[index] })
+  }
+  onSpaceDrop (index) {
+    let layout = [...this.state.layout]
+    let draggingIndex = _.indexOf(layout, this.state.dragging)
+    console.log(draggingIndex, index)
+    if (index !== draggingIndex) {
+      layout.splice(draggingIndex, 1)
+      if (index > draggingIndex) index -= 1
+      layout.splice(index, 0, this.state.dragging)
+      this.setState({ layout: [] }, () => this.setState({ layout }))
+    } else this.setState({ layout })
+  }
+  onSpaceDragEnter ({ target, index }) {
+    //console.log('dragEnter', index)
+  }
+  onSpaceDragLeave ({ target, index }) {
+    //console.log('dragLeave', index)
+  }
+  endDrag ({ target }) {
+    this.setState({ dragging: false })
+  }
+  updateHtml () {
+    let html = ReactDOMServer.renderToString(<PostMarkup post={this.state} />)
+    this.setState({ html })
   }
   changeCategory (e) {
     this.setState({ category: e.currentTarget.value })
   }
   changeSubCategory (e) {
     this.setState({ subcategory: e.currentTarget.value })
+    this.updateHtml()
   }
   changeDate (scheduled) {
     this.setState({ scheduled })
+    this.updateHtml()
+  }
+  changeToDate ({ target }) {
+    console.log(target.value)
+    this.setState({ toDate: target.value })
+    this.updateHtml()
+  }
+  changeFromDate ({ target }) {
+    console.log(target.value)
+    this.setState({ fromDate: target.value })
+    this.updateHtml()
   }
   changeTags (tags) {
     this.setState({ tags })
   }
-  openMediaModal () {
-    this.setState({ isModalOpen: 'modal is-active' })
+  addDetails () {
+    let { details, detailsEditTitle, detailsEditDescription } = this.state
+    details.push({ title: detailsEditTitle, description: detailsEditDescription })
+    this.setState({ details, detailsEditTitle: '', detailsEditDescription: '' })
   }
-  closeMediaModal (imgUrl) {
-    this.setState({ isModalOpen: 'modal' })
-    if (imgUrl) this.setState({ titleImg: imgUrl })
+  removeDetails (key) {
+    let details = [...this.state.details]
+    _.remove(details, ({ title }) => (title === key))
+    this.setState({ details })
+  }
+  notify (msg, type) {
+    notify.show(msg, type)
   }
   save () {
-    let { id, title, tags, timestamp, scheduled, category, subcategory, titleImg, rawText, page, published } = this.state
-    if (id && title && rawText && category) {
+    let { id, title, tags, timestamp, scheduled, fromDate, toDate, category, subcategory, details, titleImg, layout, html, page, published } = this.state
+    if (id.length && title.length && html.length && category.length) {
       let post = {
         id,
         title,
         titleImg,
         tags,
-        rawText,
+        layout,
+        html,
         page,
         category,
         subcategory,
+        details,
         scheduled: scheduled.isBefore('second') ? null : scheduled.utc().format(),
+        dates: [fromDate, toDate],
         published,
         timestamp: timestamp.utc().format()
       }
@@ -249,72 +282,95 @@ class PostEditor extends Component {
       })
   }
   render () {
-    return (<section className='section' style={{ height: window.innerHeight, width: '100%' }}>
+    return this.state && this.state.loading ? <Loader /> : (<section className='section' style={{ height: window.innerHeight, width: '100%' }}>
+      <InteriorMenu content={MENU} ref='menu' />
+      <PrivateSubMenu posts={this.state.posts} />
       <Notifications />
-      <div>
-        <h1 className='title'>Sonya Falcon</h1>
-        <h2 className='subtitle'>Editor</h2>
-        <a href='/dashboard'>&lt; Back to Dashboard</a>
-        <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-          <EditorContainer style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <div className='control' style={{ marginBottom: 5, marginTop: 15 }}>
-              <input style={{ borderRadius: 2, backgroundColor: '#eeeeee', height: 40, width: '100%', fontSize: 20 }} type='text' defaultValue={this.state.title} ref={(ref) => { this._title = ref }} onChange={this.changeTitle.bind(this)} placeholder='New Post' />
-            </div>
-            <Dropzone style={{ border: 1, borderStyle: 'dashed', borderColor: 'black', width: '100%', borderRadius: 5 }} onDrop={this.onDrop.bind(this)}>
-              { this.state.titleImg
-                ? (<div style={{ padding: 10 }}>
-                  <img style={{ height: 50, borderRadius: 3, margin: 5, display: 'inline-block' }} src={this.state.titleImg} />
-                  <em style={{ display: 'inline-block', fontSize: 10 }}>{this.state.titleImg}</em>
-                </div>)
-                : (<div style={{ padding: 10 }}>
-                  <h2 style={{ height: 50, borderRadius: 3, margin: 5, textAlign: 'center', display: 'inline-block' }} className='title'>+</h2>
-                  <em style={{ textAlign: 'center', display: 'inline-block' }}>Add Title Image</em>
-                </div>) }
-            </Dropzone>
-            <p style={{ display: 'inline' }}>or choose from the </p><a style={{ display: 'inline' }} onClick={this.openMediaModal.bind(this)}>Media Library</a>
-            { this.state.published ? null : <div style={{ marginBottom: 10 }}>
+      <div style={{ marginTop: 87 + 75 }}>
+        <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <MediaInput disableRemove onUpload={this.onUploadTtileImage.bind(this)} default={this.state.titleImg} />
+          <FlexContainer style={{ background: '#eee', borderRadius: 5, padding: 14, margin: '7px 0', justifyContent: 'space-around' }}>
+            <SmallText style={{ flex: 0.5 }}>Slug: /{this.state.id}</SmallText>
+            { this.state.published ? null : <div style={{ flex: 1.5 }}>
               <DatePicker
-                customInput={this.state.scheduled.isBefore('hour') ? <button className='button is-info'>Schedule</button> : <Scheduler />}
+                customInput={<Scheduler />}
                 selected={this.state.scheduled}
                 onChange={this.changeDate}
                 showTimeSelect
                 dateFormat='LLL'
               />
             </div> }
-            <SmallText>Slug: /{this.state.id}</SmallText>
-            <FlexContainer>
-              <label className="label" style={{ flex: 0.3 }}>Category</label>
-              <Dropdown content={EDITOR.CATEGORIES} value={this.state.category} onChange={this.changeCategory.bind(this)} />
-              <label className="label" style={{ flex: 0.3 }}>Sub-Category</label>
-              <Dropdown content={EDITOR.SUBCATEGORIES} value={this.state.subcategory} onChange={this.changeSubCategory.bind(this)} />
-              <SwitchButton
-                style={{ flex: 1 }}
-                id='page'
-                labelLeft='Post'
-                labelRight='Page'
-                isChecked={this.state.page}
-                action={() => this.setState({ page: !this.state.page })}
-                />
-            </FlexContainer>
-            { this.state.editor }
-            <TagsInput value={this.state.tags} onChange={this.changeTags.bind(this)} />
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-              { this.state.published ? null : <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Save</PublishButton> }
-              { this.state.published ? <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Update</PublishButton> : <PublishButton className='button is-large is-primary' onClick={this.saveAndPublish.bind(this)}>Save & Publish</PublishButton> }
-              { (/editor\/\S+/.test(window.location.pathname)) ? <a className='button is-large is-info' style={{ margin: 10 }} href={`/${this.state.id}`}>View</a> : null}
+            <Dropdown content={EDITOR.CATEGORIES} value={this.state.category} onChange={this.changeCategory.bind(this)} />
+            <SwitchButton
+              style={{ flex: 0.5 }}
+              id='page'
+              labelLeft='Post'
+              labelRight='Page'
+              isChecked={this.state.page}
+              action={() => this.setState({ page: !this.state.page })}
+              />
+          </FlexContainer>
+          <FlexContainer style={{ background: 'white', borderRadius: 5, padding: 14, margin: '7px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <div className='control' style={{ margin: '0 0 14px 0', width: '25%' }}>
+              <input style={{ color: 'black', fontFamily: '"acumin-pro-semi-condensed",sans-serif', fontSize: 25, fontWeight: 500, lineHeight: 28, borderRadius: 3, backgroundColor: '#eeeeee', height: 40, width: '100%', border: 'none' }} type='text' defaultValue={this.state.title} ref={(ref) => { this._title = ref }} onChange={this.changeTitle.bind(this)} placeholder='New Post' />
             </div>
-          </EditorContainer>
-          <PreviewContainer style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }} >
-            { this.state.titleImg ? <TitleImage><img src={this.state.titleImg} /></TitleImage> : null }
-            <TitlePreview className='content' ref={(ref) => { this._titlePreview = ref }}>{ this.state.title }</TitlePreview>
-            { this.state.page ? null : <time dateTime={this.state.timestamp.format('YYYY-MM-DD')}>{ this.state.timestamp.format('MMMM Do, YYYY') }</time>}
-            <hr />
-          <div className='content' style={{ fontSize: 15 }} ref={(ref) => { this._preview = ref }} />
-            <ShareButtons />
-          </PreviewContainer>
+            <Dropdown style={{ fontFamily: 'Ubuntu Mono', textTransform: 'uppercase', fontSize: 14, fontWeight: 'bold' }} content={EDITOR.SUBCATEGORIES} value={this.state.subcategory} onChange={this.changeSubCategory.bind(this)} />
+            <div style={{ display: 'flex', flex: 1, justifyContent: 'flex-start', flexDirection: 'row' }}>
+              <div style={{ margin: '10px 5px 0 0', flex: 1, width: '20%' }}>
+                From: <Dropdown content={[...Array(50).keys()].map((n) => n + 2000)} value={this.state.fromDate} onChange={this.changeFromDate.bind(this)} />
+              </div>
+              <div style={{ margin: '10px 0 0 5px', flex: 1, width: '20%' }}>
+                To: <Dropdown content={[...Array(50).keys()].map((n) => n + 2000)} value={this.state.toDate} onChange={this.changeToDate.bind(this)} />
+              </div>
+            </div>
+          </FlexContainer>
+          <FlexContainer style={{ flexDirection: 'column' }}>
+            <PostContainer style={{ width: '100%' }}>
+              <PostDetailsContainer>
+                {this.state.details.map(({ title, description }, index) => <PostDetailsEdit key={title}>
+                  <p style={{ color: 'red', position: 'absolute', top: -7, left: -5 }} onClick={() => this.removeDetails(title)}>x</p>
+                  <PostDetailsTitle>{title}</PostDetailsTitle>
+                  <PostDetailsDescription>{description}</PostDetailsDescription>
+                  { index === (this.state.details.length - 1) ? null : <PostDetailsLine /> }
+                </PostDetailsEdit>)}
+                { this.state.details.length < 3 ? <PostDetailsEdit>
+                  <PostDetailsEditTitle placeholder='Title' value={this.state.detailsEditTitle} onChange={({ currentTarget }) => this.setState({ detailsEditTitle: currentTarget.value })} />
+                  <PostDetailsEditDescription placeholder='Description' value={this.state.detailsEditDescription} onChange={({ currentTarget }) => this.setState({ detailsEditDescription: currentTarget.value })} />
+                  <PostDetailsEditSubmit className='button is-primary' onClick={this.addDetails.bind(this)} >Add</PostDetailsEditSubmit>
+                </PostDetailsEdit> : null }
+              </PostDetailsContainer>
+              { this.state.layout.map((section, index) => {
+                if (section.type === 'image') {
+                  return <MediaInput
+                    key={index}
+                    id={`section-${index}`}
+                    onDrop={({ target }) => {
+                      this.onSpaceDrop(index)
+                    }}
+                    onDragEnter={({ target }) => this.onSpaceDragEnter({ target, index })}
+                    onDragLeave={({ target }) => this.onSpaceDragLeave({ target, index })}
+                    dragStart={() => this.startDrag(index)}
+                    dragEnd={this.endDrag}
+                    notify={this.notify}
+                    first={index === 0}
+                    onClickRemove={() => this.removeSection(index)}
+                    onUpload={(files) => this.onUploadImage({ index, src: files })}
+                    default={section.src} />
+                }
+                else if (section.type === 'markdown') return <MarkdownInput key={index} id={`section-${index}`} onDrop={({ target }) => this.onSpaceDrop(index)} onDragEnter={({ target }) => this.onSpaceDragEnter({ target, index })} onDragLeave={({ target }) => this.onSpaceDragLeave({ target, index })}dragStart={() => this.startDrag(index)} dragEnd={this.endDrag} first={index === 0} onClickRemove={() => this.removeSection(index)} onChange={(text) => this.onTextChange({ index, src: text })} default={section.src} />
+                else if (section.type === 'space') return <Dropzone style={{ flex: 1, width: '100%' }}  />
+              }) }
+              { this.state.addNewContent }
+              <TagsInput style={{ border: 'none' }} value={this.state.tags} onChange={this.changeTags.bind(this)} />
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                { this.state.published ? null : <PublishButton disabled={!(this.state.id.length && this.state.title.length && this.state.html.length)} className='button is-large is-primary' onClick={this.save.bind(this)}>Save</PublishButton> }
+                { this.state.published ? <PublishButton className='button is-large is-primary' onClick={this.save.bind(this)}>Update</PublishButton> : <PublishButton disabled={!(this.state.id.length && this.state.title.length && this.state.html.length)} className='button is-large is-primary' onClick={this.saveAndPublish.bind(this)}>Save & Publish</PublishButton> }
+                { (/editor\/\S+/.test(window.location.pathname)) ? <a className='button is-large is-info' style={{ margin: 10 }} href={`/${this.state.id}`}>View</a> : null}
+              </div>
+            </PostContainer>
+          </FlexContainer>
         </div>
       </div>
-      <MediaLibraryModal modalClass={this.state.isModalOpen} closeModal={this.closeMediaModal.bind(this)} />
     </section>)
   }
 }

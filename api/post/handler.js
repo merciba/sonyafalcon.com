@@ -44,6 +44,12 @@ module.exports.getS3UploadCredentials = (event, context, callback) => {
     .catch(err => helpers.fail(context, 401, new Error(err)))
 }
 
+module.exports.getS3DeleteCredentials = (event, context, callback) => {
+  helpers.getS3DeleteCredentials(event)
+    .then(result => helpers.succeed(context, result))
+    .catch(err => helpers.fail(context, 401, new Error(err)))
+}
+
 module.exports.publish = (event, context, callback) => {
   helpers.publish(event)
     .then(result => helpers.succeed(context, result))

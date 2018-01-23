@@ -103,7 +103,53 @@ export const PostContainer = styled.div`
   padding: 15px;
 `
 
+export const PostDetailsContainer = styled.div`
+  float: right;
+  width: 30%;
+  padding-left: 15px;
+`
+
+export const PostDetails = styled.div`
+  width: 100%;
+`
+
+export const PostDetailsLine = styled.div`
+  box-sizing: border-box;
+  height: 1px;
+  width: 100%;
+  border: 0.5px solid #979797;
+`
+
+export const PostDetailsEdit = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  border-radius: 3px;
+  background-color: white;
+  position: relative;
+`
+
+export const AddContentContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+  padding: 14px;
+  height: 15vh;
+  border-radius: 5px;
+  background-color: #eee;
+`
+
+export const ImageSection = styled.section`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 14px 0;
+`
+
 export const Footer = () => (
   <footer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'absolute', bottom: 0, background: 'white', width: '100%', height: 80 }}>
-    <a href="http://merciba.com"><span style={{ fontSize: 15, color: 'black', flex: 1, marginLeft: 30 }}>{FOOTER.LEFT}</span></a>
+    <a href='http://merciba.com'><span style={{ fontSize: 15, color: 'black', flex: 1, marginLeft: 30 }}>{FOOTER.LEFT}</span></a>
   </footer>)

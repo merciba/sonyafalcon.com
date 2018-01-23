@@ -8,6 +8,8 @@ import Dashboard from './components/Dashboard.js'
 import PostEditor from './components/PostEditor.js'
 import Login from './components/Login.js'
 import Post from './components/Post.js'
+import CaseStudies from './components/CaseStudies.js'
+import Projects from './components/Projects.js'
 import ErrorPage from './components/ErrorPage.js'
 import { screenIs } from './components/partials'
 
@@ -69,7 +71,8 @@ class App extends Component {
       <Router regex='/dashboard$' path='/dashboard' protected><Dashboard authenticate={this.authenticate.bind(this)} /></Router>
       <Router regex='/editor$' path='/editor' protected><PostEditor authenticate={this.authenticate.bind(this)} /></Router>
       <Router regex='/editor\/\S+$' path='/editor/:id' protected><PostEditor authenticate={this.authenticate.bind(this)} /></Router>
-      <Router regex='/case-studies$' path='/case-studies'><Post /></Router>
+      <Router regex='/case-studies$' path='/case-studies'><CaseStudies /></Router>
+      <Router regex='/projects$' path='/projects'><Projects /></Router>
       <Router regex='/error$' path='/error'><ErrorPage /></Router>
       <Router regex='/\S+$' path='/:id'><Post /></Router>
     </div>)

@@ -117,6 +117,14 @@ functions:
           method: get
           integration: lambda
           cors: true
+  getS3DeleteCredentials:
+    handler: handler.getS3DeleteCredentials
+    events:
+      - http:
+          path: /getDeleteCredentials
+          method: get
+          integration: lambda
+          cors: true
 
 resources:
   Resources:

@@ -7,6 +7,7 @@ const moment = require('moment')
 const handlebars = require('handlebars')
 const Converter = require('showdown').Converter
 const markdown = new Converter()
+const { split, Syntax } = require('sentence-splitter')
 const axios = require('axios')
 const AWS = require('aws-sdk')
 const sgMail = require('@sendgrid/mail')
@@ -38,9 +39,8 @@ const render = (post, timestamp, env) => {
     fs.readFile(`${__dirname}/post.hbs`, 'utf-8', (error, source) => {
       if (error) reject(error)
       var template = handlebars.compile(source)
-      let postHTML = markdown.makeHtml(post.rawText)
-      post.html = new handlebars.SafeString(postHTML)
-      post.summary = post.rawText.substring(0, 50)
+      post.html = new handlebars.SafeString(post.html)
+      post.summary = _.filter(post.layout, { type: 'markdown' })[0].src
       post.metaKeywords = post.tags.join()
       if (!post.page) {
         post.formattedTimeAttr = moment(post.timestamp).format('YYYY-MM-DD')
@@ -124,8 +124,11 @@ const createPost = (event) => {
             subcategory: event.body.subcategory,
             timestamp: event.body.timestamp,
             titleImg: event.body.titleImg,
-            rawText: event.body.rawText,
+            layout: event.body.layout,
+            html: event.body.html,
+            dates: event.body.dates,
             scheduled: event.body.scheduled,
+            details: event.body.details,
             tags: event.body.tags,
             published: event.body.published
           }
@@ -148,16 +151,19 @@ const updatePost = (event, internal) => {
           id: event.body.id,
           timestamp: event.body.timestamp
         },
-        UpdateExpression: 'set title = :title, page = :page, titleImg = :titleImg, rawText = :rawText, category = :category, subcategory = :subcategory, scheduled = :scheduled, tags = :tags, published = :published',
+        UpdateExpression: 'set title = :title, page = :page, titleImg = :titleImg, dates = :dates, html = :html, layout = :layout, category = :category, subcategory = :subcategory, scheduled = :scheduled, tags = :tags, details = :details, published = :published',
         ExpressionAttributeValues: {
           ':title': event.body.title,
           ':page': event.body.page,
           ':category': event.body.category,
           ':subcategory': event.body.subcategory,
           ':titleImg': event.body.titleImg,
-          ':rawText': event.body.rawText,
+          ':html': event.body.html,
+          ':layout': event.body.layout,
           ':scheduled': event.body.scheduled,
+          ':dates': event.body.dates,
           ':tags': event.body.tags,
+          ':details': event.body.details,
           ':published': event.body.published
         },
         ReturnValues: 'UPDATED_NEW'
@@ -248,6 +254,25 @@ const getS3UploadCredentials = (event) => {
   })
 }
 
+const getS3DeleteCredentials = (event) => {
+  return new Promise((resolve, reject) => {
+    axios({ method: 'post', url: `${process.env.USER_API}/authenticate`, headers: { 'Authorization': event.headers.Authorization } })
+      .then((res) => {
+        let params = {
+          Bucket: process.env.CDN_BUCKET,
+          Key: event.query.filename,
+          Expires: 60,
+          ContentType: event.query.type
+        }
+        s3.getSignedUrl('deleteObject', params, (err, data) => {
+          if (err) reject(err)
+          else resolve(data)
+        })
+      })
+      .catch(reject)
+  })
+}
+
 const publish = (event) => {
   return getPost(event)
     .then((result) => {
@@ -319,6 +344,7 @@ module.exports = {
   deletePost: deletePost,
   getMediaLibrary: getMediaLibrary,
   getS3UploadCredentials: getS3UploadCredentials,
+  getS3DeleteCredentials: getS3DeleteCredentials,
   publish: publish,
   publishScheduled: publishScheduled,
   prerender: prerender,

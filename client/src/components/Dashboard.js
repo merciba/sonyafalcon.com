@@ -13,6 +13,7 @@ class Dashboard extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      loading: true,
       posts: null,
       user: window.localStorage.getItem('user')
     }
@@ -23,11 +24,12 @@ class Dashboard extends Component {
       .then(this.getPosts)
       .then((res) => {
         console.log(res.data.body)
-        if (res.data.statusCode === 401) window.location.replace('/login')
-        else this.setState({ posts: res.data.body })
+        if (res.data.statusCode === 401) console.log(res.data) // window.location.replace('/login')
+        else this.setState({ posts: res.data.body, loading: false })
       })
-      .catch(() => {
-        window.location.replace('/login')
+      .catch((err) => {
+        console.log(err)
+        // window.location.replace('/login')
       })
   }
   prerender (post) {
@@ -61,7 +63,7 @@ class Dashboard extends Component {
             </div>
           </div>
           <div className='content'>
-            { post.rawText.substring(0, 100) }
+            { post.layout[0].src.substring(0, 100) }
             <br />
             { post.tags.map((tag) => (<a href='#'>{`#${tag}`} </a>)) }
             <br />
@@ -77,7 +79,7 @@ class Dashboard extends Component {
       </div>)
   }
   render () {
-    return (this.state.posts ? <section className='section' style={{ height: window.innerHeight }}>
+    return (this.state.loading ? <Loader /> : <section className='section' style={{ height: window.innerHeight }}>
       <Notifications />
       <InteriorMenu content={MENU} />
       <div style={{ marginTop: 120 }}>
@@ -92,7 +94,7 @@ class Dashboard extends Component {
           { this.renderPostBox() }
         </div>
       </div>
-    </section> : <Loader />)
+    </section>)
   }
 }
 
