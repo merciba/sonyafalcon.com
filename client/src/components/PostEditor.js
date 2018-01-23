@@ -121,8 +121,7 @@ class PostEditor extends Component {
       delete post.dates
       this.setState(post, () => this.setState({ loading: false }))
       this._title.value = this.state.title
-    }
-    else this.setState({ loading: false })
+    } else this.setState({ loading: false })
   }
   getPost (id) {
     return axios({ method: 'get', url: `${window.config.post}/${id}` })
@@ -183,10 +182,10 @@ class PostEditor extends Component {
     } else this.setState({ layout })
   }
   onSpaceDragEnter ({ target, index }) {
-    //console.log('dragEnter', index)
+    // console.log('dragEnter', index)
   }
   onSpaceDragLeave ({ target, index }) {
-    //console.log('dragLeave', index)
+    // console.log('dragLeave', index)
   }
   endDrag ({ target }) {
     this.setState({ dragging: false })
@@ -356,9 +355,8 @@ class PostEditor extends Component {
                     onClickRemove={() => this.removeSection(index)}
                     onUpload={(files) => this.onUploadImage({ index, src: files })}
                     default={section.src} />
-                }
-                else if (section.type === 'markdown') return <MarkdownInput key={index} id={`section-${index}`} onDrop={({ target }) => this.onSpaceDrop(index)} onDragEnter={({ target }) => this.onSpaceDragEnter({ target, index })} onDragLeave={({ target }) => this.onSpaceDragLeave({ target, index })}dragStart={() => this.startDrag(index)} dragEnd={this.endDrag} first={index === 0} onClickRemove={() => this.removeSection(index)} onChange={(text) => this.onTextChange({ index, src: text })} default={section.src} />
-                else if (section.type === 'space') return <Dropzone style={{ flex: 1, width: '100%' }}  />
+                } else if (section.type === 'markdown') return <MarkdownInput key={index} id={`section-${index}`} onDrop={({ target }) => this.onSpaceDrop(index)} onDragEnter={({ target }) => this.onSpaceDragEnter({ target, index })} onDragLeave={({ target }) => this.onSpaceDragLeave({ target, index })}dragStart={() => this.startDrag(index)} dragEnd={this.endDrag} first={index === 0} onClickRemove={() => this.removeSection(index)} onChange={(text) => this.onTextChange({ index, src: text })} default={section.src} />
+                else if (section.type === 'space') return <Dropzone style={{ flex: 1, width: '100%' }} />
               }) }
               { this.state.addNewContent }
               <TagsInput style={{ border: 'none' }} value={this.state.tags} onChange={this.changeTags.bind(this)} />

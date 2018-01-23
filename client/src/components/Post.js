@@ -21,7 +21,7 @@ class Post extends Component {
       })
       .catch((err) => {
         console.log(err)
-        //window.location.replace('/error')
+        // window.location.replace('/error')
       })
   }
   getPosts () {

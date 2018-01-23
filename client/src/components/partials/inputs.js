@@ -103,8 +103,7 @@ const Media = ({ src }) => {
         }
       })
     }
-  }
-  else return null
+  } else return null
 }
 
 export const ImagePlaceholder = ({ openMediaModal }) => (<div style={{ height: '100%', width: '100%' }}>

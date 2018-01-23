@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import _ from 'lodash'
-import { markdown } from 'markdown'
-import { ButtonsContainer } from './partials'
+import { ButtonsContainer, InteriorMenu } from './partials'
 import Notifications, { notify } from 'react-notify-toast'
 import Loader from './Loader'
-import { InteriorMenu } from './partials'
 import { MENU } from '../content.json'
 
 class Dashboard extends Component {
