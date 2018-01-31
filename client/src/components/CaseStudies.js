@@ -41,7 +41,7 @@ class CaseStudies extends Component {
   }
   renderPosts (post) {
     return <section ref={(ref) => { this.sections[`${post.id}`] = ref }}>
-      <PostMarkup post={this.state.post} />
+      <PostMarkup post={post} />
     </section>
   }
   render () {

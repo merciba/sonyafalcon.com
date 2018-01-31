@@ -173,13 +173,15 @@ class PostEditor extends Component {
   onSpaceDrop (index) {
     let layout = [...this.state.layout]
     let draggingIndex = _.indexOf(layout, this.state.dragging)
-    console.log(draggingIndex, index)
-    if (index !== draggingIndex) {
-      layout.splice(draggingIndex, 1)
-      if (index > draggingIndex) index -= 1
-      layout.splice(index, 0, this.state.dragging)
-      this.setState({ layout: [] }, () => this.setState({ layout }))
-    } else this.setState({ layout })
+    if (draggingIndex === -1) return
+    else {
+      if (index !== draggingIndex) {
+        layout.splice(draggingIndex, 1)
+        if (index > draggingIndex) index -= 1
+        layout.splice(index, 0, this.state.dragging)
+        this.setState({ layout: [] }, () => this.setState({ layout }))
+      } else this.setState({ layout })
+    }
   }
   onSpaceDragEnter ({ target, index }) {
     // console.log('dragEnter', index)
@@ -250,7 +252,7 @@ class PostEditor extends Component {
         published,
         timestamp: timestamp.utc().format()
       }
-      console.log(post)
+      // console.log(post)
       return axios({ method: /editor\/\S+/.test(window.location.pathname) ? 'put' : 'post', url: window.config.post, headers: { 'Authorization': window.localStorage.getItem('id_token'), 'Content-Type': 'application/json' }, data: post })
         .then(() => notify.show('Draft saved.', 'success'))
         .catch((err) => {
@@ -287,7 +289,7 @@ class PostEditor extends Component {
       <Notifications />
       <div style={{ marginTop: 87 + 75 }}>
         <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <MediaInput disableRemove onUpload={this.onUploadTtileImage.bind(this)} default={this.state.titleImg} />
+          <MediaInput onClickRemove={() => this.setState({ titleImg: '' })} onUpload={this.onUploadTtileImage.bind(this)} default={this.state.titleImg} />
           <FlexContainer style={{ background: '#eee', borderRadius: 5, padding: 14, margin: '7px 0', justifyContent: 'space-around' }}>
             <SmallText style={{ flex: 0.5 }}>Slug: /{this.state.id}</SmallText>
             { this.state.published ? null : <div style={{ flex: 1.5 }}>

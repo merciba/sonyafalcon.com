@@ -233,11 +233,12 @@ export class MediaInput extends Component {
           borderColor: '#ccc',
           padding: 7,
           margin: '14px 0',
+          minHeight: 150,
           cursor: this.state.cursor,
           backgroundColor: this.state.background }}>
         <div style={{ position: 'absolute', width: '100%', display: this.state.dragOverCursor, background: '#00d1b2', top: -21, height: 14, borderRadius: 5 }} />
-        <Dropzone style={{ flex: 1, width: '100%' }} onDrop={this.onDrop.bind(this)} onDragOver={this.onDragOver.bind(this)} onDragLeave={this.onDragLeave.bind(this)}>
-          { this.props.disableRemove ? null : <p style={{ color: 'red' }} onClick={this.props.onClickRemove}>x</p>}
+        <p style={{ color: 'red', cursor: 'pointer' }} onClick={this.props.onClickRemove}>x</p>
+        <Dropzone style={{ flex: 1, width: '100%', minHeight: 150 }} onDrop={this.onDrop.bind(this)} onDragOver={this.onDragOver.bind(this)} onDragLeave={this.onDragLeave.bind(this)}>      
           {this.state.contents}
         </Dropzone>
         <p>or choose from the </p><a style={{ display: 'inline' }} onClick={this.openMediaModal.bind(this)}>Media Library</a>

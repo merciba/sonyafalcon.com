@@ -66,11 +66,11 @@
     "RIGHT": [
       {
         "title": "Blog",
-        "url": "/blog",
+        "url": "https://medium.com/@soflcn",
         "color": "#FF696B",
         "width": "30%",
         "type": "Link",
-        "target": "_self"
+        "target": "_blank"
       },
       {
         "title": "About",
@@ -82,11 +82,11 @@
       },
       {
         "title": "Contact",
-        "url": "/contact",
+        "url": "mailto:sonya@merciba.com",
         "color": "#FF696B",
         "width": "40%",
         "type": "Link",
-        "target": "_self"
+        "target": "_blank"
       }
     ]
   },
@@ -110,6 +110,36 @@
       "UI Design",
       "Apparel Design",
       "Print Design"
+    ]
+  },
+  "ABOUT": {
+    "TITLE": "Sonya Falcon",
+    "SUBTITLE": "Est 91",
+    "IMG": "https://s3.amazonaws.com/cdn.sonyafalcon.com/2018/01/22/reddddd.jpg",
+    "CONTENT": [
+      "I’m Sonya, a full-stack designer currently based in Brooklyn, NY. I’m skilled in a wide array of practices including product design, UX, UI, information architecture, identity, brand development and consultation, print design, illustration, and printmaking.",
+      "I specialize in moulding complex information and systems into a approachable, human-friendly design language and user experiences. I combine empathy and expression with effective communication and thoughtfully architected experiences. I maintain that art, design, and development are a language for everyone; they're meant to be collective and non-exclusionary. I strive to make information accessible, understandable, and beautiful through my work and to promote a decolonized approach to participatory design practices through my teaching and informal advocacy.",
+      "Say hi /salut / privet / barev",
+      "I’m currently open to new perm and freelance roles and I’m always happy to connect with other creatives and give advice / resources (esp woc and qtpoc).",
+      "Besides design and tech, I also like to talk about: geopolitics, the fact that our reality could be a simulation, cooking, makeup art, self-care tips, cryptocurrency, and astrology."
+    ],
+    "LINKS": [
+      {
+        "title": "Download CV",
+        "url": "https://s3.amazonaws.com/cdn.sonyafalcon.com/sonyafalcon-resume-2018.pdf"
+      },
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/sonyafalcon/"
+      },
+      {
+        "title": "Twitter",
+        "url": "https://twitter.com/soflcn"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/sonya.playstation/"
+      }
     ]
   }
 }

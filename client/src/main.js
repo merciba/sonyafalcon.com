@@ -6,8 +6,10 @@ import Router from './components/Router.js'
 import Home from './components/Home.js'
 import Dashboard from './components/Dashboard.js'
 import PostEditor from './components/PostEditor.js'
+import ContentEditor from './components/ContentEditor.js'
 import Login from './components/Login.js'
 import Post from './components/Post.js'
+import About from './components/About.js'
 import CaseStudies from './components/CaseStudies.js'
 import Projects from './components/Projects.js'
 import ErrorPage from './components/ErrorPage.js'
@@ -71,6 +73,8 @@ class App extends Component {
       <Router regex='/dashboard$' path='/dashboard' protected><Dashboard authenticate={this.authenticate.bind(this)} /></Router>
       <Router regex='/editor$' path='/editor' protected><PostEditor authenticate={this.authenticate.bind(this)} /></Router>
       <Router regex='/editor\/\S+$' path='/editor/:id' protected><PostEditor authenticate={this.authenticate.bind(this)} /></Router>
+      <Router regex='/content$' path='/content' protected><ContentEditor authenticate={this.authenticate.bind(this)} /></Router>
+      <Router regex='/about$' path='/about'><About /></Router>
       <Router regex='/case-studies$' path='/case-studies'><CaseStudies /></Router>
       <Router regex='/projects$' path='/projects'><Projects /></Router>
       <Router regex='/error$' path='/error'><ErrorPage /></Router>

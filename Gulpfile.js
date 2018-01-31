@@ -85,7 +85,7 @@ gulp.task('handlebars', function (done) {
       fs.readFile('client/src/index.hbs', 'utf-8', function (error, source) {
         if (error) reject(error)
         var template = handlebars.compile(source)
-        var html = template({ timestamp, env: process.env.NODE_ENV, metaImg: 'https://s3.amazonaws.com/cdn.sonyafalcon.com/2017/12/17/landing-bkg-desktop-01.jpg' })
+        var html = template({ timestamp, env: process.env.NODE_ENV, metaImg: 'https://s3.amazonaws.com/cdn.sonyafalcon.com/2018/01/22/reddddd.jpg' })
         resolve(html)
       })
     })
