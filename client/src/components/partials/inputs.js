@@ -237,7 +237,7 @@ export class MediaInput extends Component {
           cursor: this.state.cursor,
           backgroundColor: this.state.background }}>
         <div style={{ position: 'absolute', width: '100%', display: this.state.dragOverCursor, background: '#00d1b2', top: -21, height: 14, borderRadius: 5 }} />
-        <p style={{ color: 'red', cursor: 'pointer' }} onClick={this.props.onClickRemove}>x</p>
+        <p style={{ color: 'red', cursor: 'pointer', zIndex: 5 }} onClick={this.props.onClickRemove}>x</p>
         <Dropzone style={{ flex: 1, width: '100%', minHeight: 150 }} onDrop={this.onDrop.bind(this)} onDragOver={this.onDragOver.bind(this)} onDragLeave={this.onDragLeave.bind(this)}>      
           {this.state.contents}
         </Dropzone>

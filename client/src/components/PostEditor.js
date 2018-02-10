@@ -164,8 +164,11 @@ class PostEditor extends Component {
   removeSection (index) {
     let layout = Object.assign([], this.state.layout)
     _.remove(layout, (section, i) => index === i)
-    this.setState({ layout })
-    this.updateHtml()
+    console.log(this.state.layout, layout)
+    this.setState({ layout }, () => {
+      this.forceUpdate()
+      this.updateHtml()
+    })
   }
   startDrag (index) {
     this.setState({ dragging: this.state.layout[index] })
@@ -254,7 +257,10 @@ class PostEditor extends Component {
       }
       // console.log(post)
       return axios({ method: /editor\/\S+/.test(window.location.pathname) ? 'put' : 'post', url: window.config.post, headers: { 'Authorization': window.localStorage.getItem('id_token'), 'Content-Type': 'application/json' }, data: post })
-        .then(() => notify.show('Draft saved.', 'success'))
+        .then(() => {
+          notify.show('Draft saved.', 'success')
+          window.location.reload()
+        })
         .catch((err) => {
           console.error(err)
           notify.show('Internal Server Error', 'error')
@@ -358,7 +364,6 @@ class PostEditor extends Component {
                     onUpload={(files) => this.onUploadImage({ index, src: files })}
                     default={section.src} />
                 } else if (section.type === 'markdown') return <MarkdownInput key={index} id={`section-${index}`} onDrop={({ target }) => this.onSpaceDrop(index)} onDragEnter={({ target }) => this.onSpaceDragEnter({ target, index })} onDragLeave={({ target }) => this.onSpaceDragLeave({ target, index })}dragStart={() => this.startDrag(index)} dragEnd={this.endDrag} first={index === 0} onClickRemove={() => this.removeSection(index)} onChange={(text) => this.onTextChange({ index, src: text })} default={section.src} />
-                else if (section.type === 'space') return <Dropzone style={{ flex: 1, width: '100%' }} />
               }) }
               { this.state.addNewContent }
               <TagsInput style={{ border: 'none' }} value={this.state.tags} onChange={this.changeTags.bind(this)} />
