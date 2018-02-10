@@ -63,15 +63,6 @@ export const p = styled.p`
   font-weight: 300;
   color: #000000;
 `
-export const SmallText = styled.p`
-  font-size: 18px;
-  letter-spacing: 0px;
-  letter-spacing: .5px;
-  line-height: 28px;
-  font-family: "acumin-pro-semi-condensed",sans-serif;
-  font-weight: 300;
-  color: #000000;
-`
 
 export const Title = styled.h1`
   padding: 7px;
