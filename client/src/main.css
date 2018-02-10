@@ -2,10 +2,55 @@ a, a:visited, a:hover {
     color: rgb(255, 105, 107);
 }
 
-h1, h2, h3 {
-    font-weight: bold;
+h1{
+  color: #000000;
+  font-family: "acumin-pro-semi-condensed",sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+h2{
+  font-size:30px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  line-height: 36px;
+  font-family: 'Ubuntu Mono';
+  text-transform: uppercase;
+  color: #000000;
+}
+
+h3{
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  line-height: 14px;
+  font-family: 'Ubuntu Mono';
+  text-transform: uppercase;
+  color: #000000;
+}
+
+h4{
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  line-height: 28px;
+  font-family: 'Ubuntu Mono';
+  text-transform: uppercase;
+  color: #000000;
+}
+
+h5{
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  line-height: 14px;
+  font-family: 'Ubuntu Mono';
+  text-transform: uppercase;
+  color: #000000;
 }
 
 .switch-button .label {
     display: inline-block;
 }
+
