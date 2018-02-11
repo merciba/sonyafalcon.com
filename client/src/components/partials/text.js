@@ -193,7 +193,7 @@ export const PostMarkup = ({ post }) => (
             ? <section className="post-paragraph" key={index} style={{ margin: '14px 0' }} dangerouslySetInnerHTML={{ __html: markdownToHtml(section.src) }} />
             : <ImageSection className="post-images" key={index} >{section.src.map((file) => {
               let mimeType = mime.lookup(file)
-              if (/image/.test(mimeType)) return <div style={{ display: 'flex', flex: 1, alignItems: 'center', maxWidth: `${(100 / section.src.length) - 2}%`, minHeight: '50vh' }} key={file} src={file}><img src={file} style={{ flex: 1 }} /></div>
+              if (/image/.test(mimeType)) return <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', height: 'auto', padding: 10 }} key={file}><img src={file} style={{ flex: 0.5 }} /></div>
               else if (/video/.test(mimeType)) {
                 return (<video autoplay='autoplay' loop src={file} style={{ flex: 1, maxWidth: `${(100 / section.src.length) - 2}%` }}>
                   Your browser does not support the video tag.

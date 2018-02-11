@@ -12,4 +12,5 @@ export const HeaderImage = styled.img`
     z-index: 0;
     overflow: hidden;
     width: 100%;
+    max-height: 700px;
 `

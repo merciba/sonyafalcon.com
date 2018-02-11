@@ -144,9 +144,11 @@ export const AddContentContainer = styled.div`
 
 export const ImageSection = styled.section`
   display: flex;
+  align-items: flex-start;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 14px 0;
+  height: auto;
 `
 
 export const Footer = () => (
