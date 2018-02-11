@@ -91,7 +91,10 @@ export const Text = styled(p)`
 `
 
 export const SmallText = styled(p)`
-  font-size: 1rem;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing 0.5px;
+  font-weight: 300;
   padding: 7px;
   font-weight: 300;
 `
@@ -159,7 +162,7 @@ export const PostContent = styled(p)`
 
 export const PostDates = styled.div`
   flex: 1;
-  margin: 7px 0 0 0;
+  margin: 12px 0 0 0;
   height: 21px;
   width: 95px;
   color: #898D91;

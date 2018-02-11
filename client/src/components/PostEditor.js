@@ -259,7 +259,6 @@ class PostEditor extends Component {
       return axios({ method: /editor\/\S+/.test(window.location.pathname) ? 'put' : 'post', url: window.config.post, headers: { 'Authorization': window.localStorage.getItem('id_token'), 'Content-Type': 'application/json' }, data: post })
         .then(() => {
           notify.show('Draft saved.', 'success')
-          window.location.reload()
         })
         .catch((err) => {
           console.error(err)
