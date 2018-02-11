@@ -11,7 +11,7 @@ class Router extends Component {
   render () {
     if (this.state && this.state.regex.test(window.location.pathname)) {
       if (this.props.path === '/:id') {
-        if (!window.location.pathname.match(/^\/(login|editor|content|about|dashboard|travel|error|case-studies$)/)) return this.props.children
+        if (!window.location.pathname.match(/^\/(login|editor|projects|about|dashboard|travel|error|case-studies$)/)) return this.props.children
         else return null
       }
       return this.props.children

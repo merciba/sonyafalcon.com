@@ -128,6 +128,8 @@ export const InteriorMenuLogo = styled.img`
 
 export const InteriorMenuLink = styled.a`
   flex: 1;
+  display: flex;
+  align-items: center;
   text-align: center;
   transform: scale(1, 1.1);
   height: 45px;
@@ -149,6 +151,8 @@ export const InteriorMenuLink = styled.a`
 export const InteriorMenuText = styled.p`
   flex: 1;
   text-align: center;
+  display: flex;
+  align-items: center;
   transform: scale(1, 1.1);
   height: 45px;
   ${media.tablet`min-width: 100%;`}
@@ -158,9 +162,9 @@ export const InteriorMenuText = styled.p`
   text-transform: uppercase;
   font-family: Ubuntu Mono, monospace;
   ${media.huge`font-size: 3vh;`}
-  ${media.desktoplarge`font-size: 2.5vh;`}
+  ${media.desktoplarge`font-size: 2.75vh;`}
   ${media.desktop`font-size: 2.5vh;`}
-  ${media.tablet`font-size: 2.5vh;`}
+  ${media.tablet`font-size: 2.25vh;`}
   ${media.mobile`font-size: 2vh;`}
   font-weight: bold;
   letter-spacing: 5px;
@@ -220,20 +224,23 @@ export const InteriorSubMenuContainer = styled.div`
 
 export const InteriorSubMenuLink = styled.a`
   flex: 1;
+  display: flex;
+  align-items: center;
   text-align: center;
+  justify-content: center;
   transform: scale(1, 1.1);
-  height: 45px;
+  height: 100%;
   ${media.tablet`min-width: 100%;`}
   ${media.mobile`min-width: 100%;`}
   ${media.tablet`text-align: inherit;`}
   ${media.mobile`text-align: inherit;`}
   text-transform: uppercase;
   font-family: Ubuntu Mono, monospace;
-  ${media.huge`font-size: 1.5vh;`}
-  ${media.desktoplarge`font-size: 2vh;`}
-  ${media.desktop`font-size: 2vh;`}
-  ${media.tablet`font-size: 2vh;`}
-  ${media.mobile`font-size: 1.5vh;`}
+  ${media.huge`font-size: 2vh;`}
+  ${media.desktoplarge`font-size: 1.75vh;`}
+  ${media.desktop`font-size: 1.5vh;`}
+  ${media.tablet`font-size: 1.25vh;`}
+  ${media.mobile`font-size: 1vh;`}
   font-weight: bold;
   letter-spacing: 5px;
 `
@@ -266,7 +273,7 @@ export class InteriorMenu extends Component {
   }
   renderLinks (item) {
     let Item = exports[`InteriorMenu${item.type}`]
-    return <Item target={item.target} key={item.title} href={item.url} style={{ color: this.props.post && (this.props.post.category === item.title) ? '#FF696B' : '#262A3B', minWidth: item.width, padding: 10 }}><span style={{ lineHeight: 'auto' }}>{item.title}</span></Item>
+    return <Item target={item.target} key={item.title} href={item.url} style={{ color: this.props.post && (this.props.post.category === item.title) ? '#FF696B' : '#262A3B', minWidth: item.width }}><span style={{ flex: 1, lineHeight: 'auto' }}>{item.title}</span></Item>
   }
   render () {
     return (<InteriorMenuContainer>

@@ -3,7 +3,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import { markdownToHtml } from '../util'
 import moment from 'moment'
-import { InteriorMenu, InteriorSubMenu, FlexContainer, HeaderImage, PostTitle, PostSubCategory, PostContent, PostContainer, PostDetailsContainer, PostDetails, PostDetailsTitle, PostDetailsDescription, PostDetailsLine } from './partials'
+import { InteriorMenu, InteriorSubMenu, PostMarkup, FlexContainer, HeaderImage, PostTitle, PostSubCategory, PostContent, PostContainer, PostDetailsContainer, PostDetails, PostDetailsTitle, PostDetailsDescription, PostDetailsLine } from './partials'
 import { MENU } from '../content.json'
 
 class Projects extends Component {
@@ -18,7 +18,7 @@ class Projects extends Component {
           let posts = _.filter(res.data.body, { published: true, category: 'Projects' })
           let post = posts[0]
           this.setState({ posts, post })
-        } else window.location.replace('/error')
+        } else console.log(res) //else window.location.replace('/error')
       })
       .catch((err) => {
         console.log(err)
@@ -41,22 +41,7 @@ class Projects extends Component {
   }
   renderPosts (post) {
     return <section ref={(ref) => { this.sections[`${post.id}`] = ref }}>
-      <FlexContainer style={{ flexDirection: 'column', marginTop: 162 }}>
-        <HeaderImage src={post.titleImg} />
-        <PostContainer>
-          <PostDetailsContainer>
-            {post.details.map(({ title, description }, index) => <PostDetails key={title}>
-              <PostDetailsTitle>{title}</PostDetailsTitle>
-              <PostDetailsDescription>{description}</PostDetailsDescription>
-              { index === (post.details.length - 1) ? null : <PostDetailsLine /> }
-            </PostDetails>)}
-          </PostDetailsContainer>
-          <PostTitle>{ post.title }</PostTitle>
-          { post.subcategory !== 'None' ? <PostSubCategory>{ post.subcategory }</PostSubCategory> : null }
-          { post.page ? null : <time style={{ fontWeight: 'bold', marginTop: 15 }} dateTime={moment(post.timestamp).format('YYYY-MM-DD')}>{ moment(post.timestamp).format('MMMM Do, YYYY') }</time>}
-          <PostContent dangerouslySetInnerHTML={this.createMarkup(post)} className='content' />
-        </PostContainer>
-      </FlexContainer>
+      <PostMarkup post={post} />
     </section>
   }
   render () {
