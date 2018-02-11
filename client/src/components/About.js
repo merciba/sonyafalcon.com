@@ -1,30 +1,30 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { InteriorMenu, PostTitle, PostSubCategory, PostContent, FlexContainer } from './partials'
+import { InteriorMenu, H5, PostTitle, PostSubCategory, PostContent, FlexContainer } from './partials'
 import { MENU, ABOUT } from '../content.json'
 
 class About extends Component {
 
   renderParagraphs (text, index) {
-    return <p style={{ padding: '0 15px', flex: 1 }} key={index}>{text}</p>
+    return <p style={{ padding: '0 15px', display: 'flex', flex: 1 }} dangerouslySetInnerHTML={{ __html: text }} key={index} />
   }
 
   renderLinks ({ title, url }, index) {
-    return <a style={{ padding: '0 15px', flex: 1 }} key={index} href={url}>{title}</a>
+    return <H5 style={{ padding: '0 15px', color: '#FF696B', maxHeight: 35, width: 131, fontSize: 20, letterSpacing: 1, lineHeight: 35 }} key={index} href={url}>{title}</H5>
   }
 
   render () {
     return <article>
       <InteriorMenu content={MENU} post={{ category: 'About' }} ref='menu' />
       <FlexContainer style={{ height: '100%', padding: 30, marginTop: 87, alignItems: 'flex-start' }}>
-        <div style={{ flex: 1, marginRight: 15, maxHeight: 1000, overflow: 'hidden' }}>
+        <div style={{ flex: 1, marginRight: 15, maxHeight: '80%', overflow: 'hidden' }}>
           <img style={{ width: '100%', marginTop: '-25%' }} src={ABOUT.IMG} />
         </div>
-        <PostContent style={{ flex: 1, marginLeft: 15, height: '80%', display: 'flex', flexDirection: 'column' }}>
+        <PostContent style={{ flex: 1, fontSize: '1.75vh', maxHeight: '90vh', marginLeft: 15, display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
           <PostTitle>{ABOUT.TITLE}</PostTitle>
           <PostSubCategory>{ABOUT.SUBTITLE}</PostSubCategory>
           {ABOUT.CONTENT.map(this.renderParagraphs.bind(this))}
-          {ABOUT.LINKS.map(this.renderLinks.bind(this))}
+          <div style={{ marginTop: -320 }}>{ABOUT.LINKS.map(this.renderLinks.bind(this))}</div>
         </PostContent>
       </FlexContainer>
     </article>
