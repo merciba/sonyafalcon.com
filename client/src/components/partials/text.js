@@ -7,38 +7,38 @@ import { FlexContainer, HeaderImage, PostContainer, PostDetailsContainer, ImageS
 
 
 export const H1 = styled.h1`
-  color: #000000;
   font-family: "acumin-pro-semi-condensed",sans-serif;
   font-size: 28px;
   font-weight: 500;
   line-height: 30px;
+  color: #000000;
 `
 
 export const H2 = styled.h2`
-  font-size:30px;
+  font-size: 28px;
   font-weight: bold;
-  letter-spacing: 4px;
-  line-height: 36px;
+  letter-spacing: 3px;
+  line-height: 38px;
   font-family: 'Ubuntu Mono';
   text-transform: uppercase;
   color: #000000;
 `
 
 export const H3 = styled.h3`
-  font-size: 16px;
+  font-size: 22px;
   font-weight: bold;
   letter-spacing: 1px;
-  line-height: 14px;
+  line-height: 35px;
   font-family: 'Ubuntu Mono';
   text-transform: uppercase;
   color: #000000;
 `
 
 export const H4 = styled.h4`
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
   letter-spacing: 1px;
-  line-height: 28px;
+  line-height: 26px;
   font-family: 'Ubuntu Mono';
   text-transform: uppercase;
   color: #000000;
@@ -91,7 +91,6 @@ export const Text = styled(p)`
 `
 
 export const SmallText = styled(p)`
-  font-size: 1rem;
   padding: 7px;
   font-weight: 300;
 `
