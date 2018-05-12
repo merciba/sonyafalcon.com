@@ -1,38 +1,34 @@
 /*eslint-env node */
-'use strict';
+"use strict";
 
-var webpack = require('webpack')
-var path = require('path')
+var webpack = require("webpack");
+var path = require("path");
 
 module.exports = {
-  entry: './client/src/main.js',
+  entry: "./client/src/main.js",
   output: {
     path: `${__dirname}/client/dist`,
-    filename: 'main.js'
+    filename: "main.js"
   },
   resolve: {
-    modules: [
-      path.resolve('./node_modules')
-    ]
+    modules: [path.resolve("./node_modules")]
   },
   module: {
     loaders: [
       {
         test: /\.es6|js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: "babel-loader",
         query: {
-          presets: ['es2015', 'stage-0', 'react'],
-          plugins: ['transform-async-to-generator']
+          presets: ["es2015", "stage-0", "react"],
+          plugins: ["transform-async-to-generator"]
         }
       },
       {
         test: /\.css$/,
-        loader: 'css-loader'
+        loader: "css-loader"
       }
     ]
   },
-  plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin()
-  ]
-}
+  plugins: [new webpack.optimize.OccurrenceOrderPlugin()]
+};

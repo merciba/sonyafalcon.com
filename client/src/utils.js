@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+import Promise from "bluebird";
 
 /// //////////////////////////////////
 
@@ -9,12 +9,12 @@ const routes = [
   /login$/,
   /signup$/,
   /post\/\w+/
-]
+];
 
-export const noMatch = (route) => {
-  let m = true
+export const noMatch = route => {
+  let m = true;
   for (let i = 0; i < routes.length; i++) {
-    if (routes[i].test(route)) m = false
+    if (routes[i].test(route)) m = false;
   }
-  return m
-}
+  return m;
+};
