@@ -77,10 +77,6 @@ class Home extends Component {
             }
           />
         </LogoContainer>
-        {// TODO: Remove this at launch
-        window.env === "prod" ? (
-          <ComingSoon>{HOME.TITLES.map(this.renderTitle)}</ComingSoon>
-        ) : null}
         <Menu content={MENU} />
       </FullScreenContainer>
     );

@@ -6,7 +6,8 @@ import {
   PostTitle,
   PostSubCategory,
   PostContent,
-  FlexContainer
+  FlexContainer,
+  screenIs
 } from "./partials";
 import { MENU, ABOUT } from "../content.json";
 
@@ -14,7 +15,7 @@ class About extends Component {
   renderParagraphs(text, index) {
     return (
       <p
-        style={{ padding: "0 15px", display: "flex", flex: 1 }}
+        style={{ padding: "7px 0", display: "flex", flex: 1, lineHeight: "3vh" }}
         dangerouslySetInnerHTML={{ __html: text }}
         key={index}
       />
@@ -23,21 +24,22 @@ class About extends Component {
 
   renderLinks({ title, url }, index) {
     return (
-      <H5
-        style={{
-          padding: "0 15px",
-          color: "#FF696B",
-          maxHeight: 35,
-          width: 131,
-          fontSize: 20,
-          letterSpacing: 1,
-          lineHeight: 35
-        }}
-        key={index}
-        href={url}
-      >
+      <a href={url}>
+        <H5
+          style={{
+            flex: 1,
+            color: "#FF696B",
+            maxHeight: 35,
+            width: "25vh",
+            fontSize: 20,
+            letterSpacing: 1,
+            lineHeight: "4vh"
+          }}
+          key={index}
+        >
         {title}
-      </H5>
+        </H5>
+      </a>
     );
   }
 
@@ -48,15 +50,17 @@ class About extends Component {
         <FlexContainer
           style={{
             height: "100%",
-            padding: 30,
-            marginTop: 87,
-            alignItems: "flex-start"
+            padding: screenIs("mobile") ? 15 : 30,
+            marginTop: "12vh",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            flexDirection: screenIs("mobile") ? "column" : "row"
           }}
         >
           <div
             style={{
               flex: 1,
-              marginRight: 15,
+              marginRight: screenIs("mobile") ? 0 : 15,
               maxHeight: "80%",
               overflow: "hidden"
             }}
@@ -66,20 +70,18 @@ class About extends Component {
           <PostContent
             style={{
               flex: 1,
-              fontSize: "1.75vh",
-              maxHeight: "90vh",
-              marginLeft: 15,
+              fontSize: "2vh",
+              marginLeft: screenIs("mobile") ? 0 : 15,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-around"
+              justifyContent: "flex-start"
             }}
           >
-            <PostTitle>{ABOUT.TITLE}</PostTitle>
-            <PostSubCategory>{ABOUT.SUBTITLE}</PostSubCategory>
+            <PostTitle style={{ paddingLeft: 0 }}>{ABOUT.TITLE}</PostTitle>
+            <PostSubCategory style={{ paddingLeft: 0 }}>{ABOUT.SUBTITLE}</PostSubCategory>
             {ABOUT.CONTENT.map(this.renderParagraphs.bind(this))}
-            <div style={{ marginTop: -320 }}>
-              {ABOUT.LINKS.map(this.renderLinks.bind(this))}
-            </div>
+            <br />
+            {ABOUT.LINKS.map(this.renderLinks.bind(this))}
           </PostContent>
         </FlexContainer>
       </article>

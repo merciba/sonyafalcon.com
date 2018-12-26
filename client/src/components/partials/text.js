@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import mime from "mime-types";
+import { screenIs, media } from "./breakpoints";
 import { markdownToHtml } from "../../util";
 import {
   FlexContainer,
@@ -137,7 +138,7 @@ export const Tag = styled.span`
 `;
 
 export const PostTitle = styled(H1)`
-  height: 28px;
+  min-height: 28px;
   padding: 0 15px;
 `;
 
@@ -178,9 +179,24 @@ export const PostDates = styled.div`
 `;
 
 export const PostMarkup = ({ post }) => (
-  <FlexContainer style={{ flexDirection: "column", marginTop: 162 }}>
+  <FlexContainer style={{ flexDirection: "column", marginTop: screenIs("mobile") ? "12vh" : "22vh" }}>
     <HeaderImage className="post-header-image" src={post.titleImg} />
-    <PostContainer style={{ width: "85%" }}>
+    <PostContainer style={{ width: screenIs("mobile") ? "100%" : "85%" }}>
+      <FlexContainer
+        className="post-header"
+        style={{
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          maxWidth: screenIs("mobile") ? "100%" : "70%",
+          margin: "14px 0 0 0"
+        }}
+      >
+        <PostTitle>{post.title}</PostTitle>
+        <PostDates>{post.dates[0] === post.dates[1] ? post.dates[0] : `${post.dates[0]}-${post.dates[1]}`}</PostDates>
+      </FlexContainer>
+      {post.subcategory !== "None" ? (
+        <PostSubCategory>{post.subcategory}</PostSubCategory>
+      ) : null}
       <PostDetailsContainer className="post-details">
         {post.details.map(({ title, description }, index) => (
           <PostDetails key={title}>
@@ -190,21 +206,6 @@ export const PostMarkup = ({ post }) => (
           </PostDetails>
         ))}
       </PostDetailsContainer>
-      <FlexContainer
-        className="post-header"
-        style={{
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          maxWidth: "70%",
-          margin: "14px 0 0 0"
-        }}
-      >
-        <PostTitle>{post.title}</PostTitle>
-        <PostDates>{`${post.dates[0]}-${post.dates[1]}`}</PostDates>
-      </FlexContainer>
-      {post.subcategory !== "None" ? (
-        <PostSubCategory>{post.subcategory}</PostSubCategory>
-      ) : null}
       {post.page ? null : (
         <time
           style={{ fontWeight: "bold", marginTop: 15 }}

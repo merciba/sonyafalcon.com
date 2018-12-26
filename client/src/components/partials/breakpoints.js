@@ -41,7 +41,6 @@ export const screenIs = query => {
       );
     case "mobile":
       return (
-        mobile() &&
         (window.innerWidth <= sizes.mobile ||
           window.innerHeight <= sizes.mobile)
       );

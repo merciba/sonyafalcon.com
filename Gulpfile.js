@@ -82,8 +82,9 @@ gulp.task("server", function(done) {
 gulp.task("build", function(done) {
   shell.rm("client/dist/*");
   exec("webpack", ["--debug"], (err, stdout, stderr) => {
-    if (err) console.log(stderr);
-    if (err) throw new Error(err);
+    if (err) {
+      console.log(new Error(stdout));
+    }
     console.log(stdout);
     shell.mv("client/dist/main.js", `client/dist/bundle-${timestamp}.js`);
     shell.cp("client/src/main.css", `client/dist/bundle-${timestamp}.css`);
@@ -222,49 +223,49 @@ gulp.task("cloudfront", function(done) {
           ).replace(".html", "");
 
           shell.exec(
-            `aws s3 rm s3://sonyafalcon.com/client/dist/index-${oldTimestamp}.html --profile merciba`
+            `aws s3 rm s3://sonyafalcon.com/client/dist/index-${oldTimestamp}.html`
           );
           shell.exec(
-            `aws s3 rm s3://sonyafalcon.com/client/dist/bundle-${oldTimestamp}.js --profile merciba`
+            `aws s3 rm s3://sonyafalcon.com/client/dist/bundle-${oldTimestamp}.js`
           );
           shell.exec(
-            `aws s3 rm s3://sonyafalcon.com/client/dist/bundle-${oldTimestamp}.css --profile merciba`
-          );
-
-          shell.exec(
-            `aws s3 rm s3://www.sonyafalcon.com/client/dist/index-${oldTimestamp}.html --profile merciba`
-          );
-          shell.exec(
-            `aws s3 rm s3://www.sonyafalcon.com/client/dist/bundle-${oldTimestamp}.js --profile merciba`
-          );
-          shell.exec(
-            `aws s3 rm s3://www.sonyafalcon.com/client/dist/bundle-${oldTimestamp}.css --profile merciba`
+            `aws s3 rm s3://sonyafalcon.com/client/dist/bundle-${oldTimestamp}.css`
           );
 
           shell.exec(
-            `aws s3 cp client/dist/favicon.ico s3://sonyafalcon.com/client/dist/favicon.ico --profile merciba --content-type "image/x-icon"`
+            `aws s3 rm s3://www.sonyafalcon.com/client/dist/index-${oldTimestamp}.html`
           );
           shell.exec(
-            `aws s3 cp client/dist/index-${timestamp}.html s3://sonyafalcon.com/client/dist/index-${timestamp}.html --profile merciba --content-type "text/html"`
+            `aws s3 rm s3://www.sonyafalcon.com/client/dist/bundle-${oldTimestamp}.js`
           );
           shell.exec(
-            `aws s3 cp client/dist/bundle-${timestamp}.js s3://sonyafalcon.com/client/dist/bundle-${timestamp}.js --profile merciba --content-type "application/javascript"`
-          );
-          shell.exec(
-            `aws s3 cp client/dist/bundle-${timestamp}.css s3://sonyafalcon.com/client/dist/bundle-${timestamp}.css --profile merciba --content-type "text/css"`
+            `aws s3 rm s3://www.sonyafalcon.com/client/dist/bundle-${oldTimestamp}.css`
           );
 
           shell.exec(
-            `aws s3 cp client/dist/favicon.ico s3://www.sonyafalcon.com/client/dist/favicon.ico --profile merciba --content-type "image/x-icon"`
+            `aws s3 cp client/dist/favicon.ico s3://sonyafalcon.com/client/dist/favicon.ico --content-type "image/x-icon"`
           );
           shell.exec(
-            `aws s3 cp client/dist/index-${timestamp}.html s3://www.sonyafalcon.com/client/dist/index-${timestamp}.html --profile merciba --content-type "text/html"`
+            `aws s3 cp client/dist/index-${timestamp}.html s3://sonyafalcon.com/client/dist/index-${timestamp}.html --content-type "text/html"`
           );
           shell.exec(
-            `aws s3 cp client/dist/bundle-${timestamp}.js s3://www.sonyafalcon.com/client/dist/bundle-${timestamp}.js --profile merciba --content-type "application/javascript"`
+            `aws s3 cp client/dist/bundle-${timestamp}.js s3://sonyafalcon.com/client/dist/bundle-${timestamp}.js --content-type "application/javascript"`
           );
           shell.exec(
-            `aws s3 cp client/dist/bundle-${timestamp}.css s3://www.sonyafalcon.com/client/dist/bundle-${timestamp}.css --profile merciba --content-type "text/css"`
+            `aws s3 cp client/dist/bundle-${timestamp}.css s3://sonyafalcon.com/client/dist/bundle-${timestamp}.css --content-type "text/css"`
+          );
+
+          shell.exec(
+            `aws s3 cp client/dist/favicon.ico s3://www.sonyafalcon.com/client/dist/favicon.ico --content-type "image/x-icon"`
+          );
+          shell.exec(
+            `aws s3 cp client/dist/index-${timestamp}.html s3://www.sonyafalcon.com/client/dist/index-${timestamp}.html --content-type "text/html"`
+          );
+          shell.exec(
+            `aws s3 cp client/dist/bundle-${timestamp}.js s3://www.sonyafalcon.com/client/dist/bundle-${timestamp}.js --content-type "application/javascript"`
+          );
+          shell.exec(
+            `aws s3 cp client/dist/bundle-${timestamp}.css s3://www.sonyafalcon.com/client/dist/bundle-${timestamp}.css --content-type "text/css"`
           );
           return { ETag, DistributionConfig };
         });

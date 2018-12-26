@@ -353,7 +353,7 @@ class PostEditor extends Component {
         <InteriorMenu content={MENU} ref="menu" />
         <PrivateSubMenu posts={this.state.posts} />
         <Notifications />
-        <div style={{ marginTop: 87 + 75 }}>
+        <div style={{ marginTop: "22vh" }}>
           <div
             style={{
               height: "100%",

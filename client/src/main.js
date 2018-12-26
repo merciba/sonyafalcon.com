@@ -21,6 +21,7 @@ import Promise from "bluebird";
 import $ from "jquery";
 import screenOrientation from "screen-orientation";
 
+window.$ = $;
 window.env = $("[data-env]").data("env");
 window.config = require(`./api.js`);
 window.api = {

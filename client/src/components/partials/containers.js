@@ -18,7 +18,7 @@ import {
 import { SubmitButton, ReadMore, Explore } from "./buttons";
 import { BackgroundImage, FullScreenImage, HalfScreenImage } from "./images";
 import { Menu } from "./menu";
-import { media } from "./breakpoints";
+import { media, screenIs } from "./breakpoints";
 import { MENU, FOOTER } from "../../content.json";
 import Parallax from "react-springy-parallax";
 import slug from "slugg";
@@ -98,7 +98,8 @@ export const LogoContainer = styled.div`
   max-height: 25vh;
   position: absolute;
   top: 25vh;
-  ${media.mobile`padding: 55px`} padding: auto;
+  ${media.mobile`padding: 55px;`}
+  padding: auto;
   justify-content: center;
 `;
 
@@ -116,6 +117,9 @@ export const PostContainer = styled.div`
 export const PostDetailsContainer = styled.div`
   float: right;
   width: 30%;
+  margin-top: -10vh;
+  ${media.mobile`margin-top: 0;`}
+  ${media.mobile`width: 100%;`}
   padding-left: 15px;
 `;
 

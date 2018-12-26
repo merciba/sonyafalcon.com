@@ -50,11 +50,6 @@ export const MenuContainer = styled.div`
   position: absolute;
   background: transparent;
   display: flex;
-  ${media.huge`flex-direction: row;`}
-  ${media.desktoplarge`flex-direction: row;`}
-  ${media.desktop`flex-direction: row;`}
-  ${media.tablet`flex-direction: row;`}
-  ${media.mobile`flex-direction: column;`}
   justify-content: space-between;
   ${media.huge`bottom: 0;`}
   ${media.desktoplarge`bottom: 0;`}
@@ -70,6 +65,7 @@ export const MenuContainer = styled.div`
 export const LeftMenu = styled.div`
   flex: 1;
   display: flex;
+  white-space: nowrap;
   ${media.tablet`text-align: left;`}
   ${media.mobile`text-align: left;`}
   ${media.huge`flex-direction: row;`}
@@ -79,10 +75,10 @@ export const LeftMenu = styled.div`
   ${media.mobile`flex-direction: column;`}
   justify-content: flex-start;
   ${media.huge`max-width: 55%;`}
-  ${media.desktoplarge`max-width: 55%;`}
-  ${media.desktop`max-width: 55%;`}
-  ${media.tablet`max-width: 60%;`}
-  ${media.mobile`max-width: 60%;`}
+  ${media.desktoplarge`max-width: 48%; min-width: 0;`}
+  ${media.desktop`max-width: 48%; min-width: 0;`}
+  ${media.tablet`max-width: 48%; min-width: 0;`}
+  ${media.mobile`max-width: 48%; min-width: 0;`}
 `;
 
 export const RightMenu = styled.div`
@@ -99,12 +95,12 @@ export const RightMenu = styled.div`
   ${media.huge`max-width: 33%;`}
   ${media.desktoplarge`max-width: 33%;`}
   ${media.desktop`max-width: 33%;`}
-  ${media.tablet`max-width: 100%;`}
-  ${media.mobile`max-width: 100%;`}
+  ${media.tablet`max-width: 48%; min-width: 0;`}
+  ${media.mobile`max-width: 48%; min-width: 0;;`}
 `;
 
 export const InteriorMenuContainer = styled.div`
-  z-index: 1;
+  z-index: 2;
   text-align: center;
   position: fixed;
   background: white;
@@ -115,8 +111,27 @@ export const InteriorMenuContainer = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 87px;
+  height: 12vh;
   border-bottom: 0.25px solid #979797;
+`;
+
+export const InteriorMobileMenuContainer = styled.div`
+  z-index: 1;
+  padding: 2vh 5vw;
+  text-align: center;
+  position: fixed;
+  background: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  top: -32vh;
+  left: 0;
+  width: 100%;
+  height: 18vh;
+  border-bottom: 0.25px solid #979797;
+  -webkit-transition: top 250ms;
+  transition: top 250ms;
 `;
 
 export const InteriorMenuLogo = styled.img`
@@ -145,7 +160,12 @@ export const InteriorMenuLink = styled.a`
   ${media.tablet`font-size: 2.5vh;`}
   ${media.mobile`font-size: 2vh;`}
   font-weight: bold;
-  letter-spacing: 5px;
+  letter-spacing: 0.2vw;
+  &:hover {
+    span {
+      color: #FF696B;
+    }
+  }
 `;
 
 export const InteriorMenuText = styled.p`
@@ -211,15 +231,22 @@ export const InteriorSubMenuContainer = styled.div`
   padding-left: 1.5vw;
   display: flex;
   flex-direction: row;
-  height: 75px;
+  height: 10vh;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: fixed;
-  top: 87px;
+  top: 12vh;
+  width: 100vw;
   left: 0;
   background: white;
-  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
   box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.16);
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -webkit-transition: top 250ms;
+  transition: top 250ms;
 `;
 
 export const InteriorSubMenuLink = styled.a`
@@ -229,7 +256,7 @@ export const InteriorSubMenuLink = styled.a`
   text-align: center;
   justify-content: center;
   transform: scale(1, 1.1);
-  height: 100%;
+  height: 2vh;
   ${media.tablet`min-width: 100%;`}
   ${media.mobile`min-width: 100%;`}
   ${media.tablet`text-align: inherit;`}
@@ -242,7 +269,15 @@ export const InteriorSubMenuLink = styled.a`
   ${media.tablet`font-size: 1.25vh;`}
   ${media.mobile`font-size: 1vh;`}
   font-weight: bold;
-  letter-spacing: 5px;
+  letter-spacing: 0.2vw;
+  span {
+    min-width: 15vw;
+  }
+  &:hover {
+    span {
+      color: #FF696B;
+    }
+  }
 `;
 
 export class Menu extends Component {
@@ -257,30 +292,30 @@ export class Menu extends Component {
         target={item.target}
         key={item.title}
         href={item.url}
-        style={{ color: item.color, maxWidth: item.width, padding: 10 }}
+        style={{ color: item.color, maxWidth: item.width, padding: 10, lineHeight: "2vh" }}
       >
         <span style={{ height: window.innerHeight * 0.2 }}>{item.title}</span>
       </Item>
     );
   }
   render() {
-    return window.env === "dev" ? (
+    return (
       <MenuContainer>
         <LeftMenu>{this.props.content.LEFT.map(this.renderLinks)}</LeftMenu>
         <RightMenu>{this.props.content.RIGHT.map(this.renderLinks)}</RightMenu>
       </MenuContainer>
-    ) : (
-      <MenuContainer>
-        {this.props.content.PLACEHOLDER.map(this.renderLinks)}
-      </MenuContainer>
-    );
+    )
   }
 }
 
-export class InteriorMenu extends Component {
+export class MobileMenu extends Component {
   constructor(props) {
     super(props);
+    this.links = [];
     this.renderLinks = this.renderLinks.bind(this);
+    this.state = {
+      open: false,
+    }
   }
   renderLinks(item) {
     let Item = exports[`InteriorMenu${item.type}`];
@@ -302,26 +337,87 @@ export class InteriorMenu extends Component {
     );
   }
   render() {
-    return (
-      <InteriorMenuContainer>
+    return (<InteriorMobileMenuContainer style={{ top: this.props.top }}>
         <InteriorLeftMenu>
           {this.props.content.LEFT.map(this.renderLinks)}
         </InteriorLeftMenu>
-        <a href="/">
-          <InteriorMenuLogo src="https://s3.amazonaws.com/cdn.sonyafalcon.com/interior-logo.svg" />
-        </a>
         <InteriorRightMenu>
           {this.props.content.RIGHT.map(this.renderLinks)}
         </InteriorRightMenu>
-      </InteriorMenuContainer>
+      </InteriorMobileMenuContainer>);
+  }
+}
+
+export class InteriorMenu extends Component {
+  constructor(props) {
+    super(props);
+    this.renderLinks = this.renderLinks.bind(this);
+    this.state = {
+      icon: "fas fa-bars",
+      menuTop: "-32vh"
+    }
+  }
+  hide() {
+    this.setState({ icon: "fas fa-bars", menuTop: "-32vh" })
+  }
+  show() {
+    this.setState({ icon: "fas fa-times", menuTop: "12vh" })
+  }
+  toggle() {
+    this.state.icon === "fas fa-bars" ? this.show() : this.hide()
+  }
+  renderLinks(item) {
+    let Item = exports[`InteriorMenu${item.type}`];
+    return (
+      <Item
+        target={item.target}
+        key={item.title}
+        href={item.url}
+        style={{
+          color:
+            this.props.post && this.props.post.category === item.title
+              ? "#FF696B"
+              : "#262A3B",
+          minWidth: item.width
+        }}
+      >
+        <span style={{ flex: 1, lineHeight: "auto" }}>{item.title}</span>
+      </Item>
     );
+  }
+  render() {
+    return screenIs("mobile") ?
+      (<div>
+        <MobileMenu content={this.props.content} top={this.state.menuTop} />
+        <InteriorMenuContainer>
+          <i onClick={this.toggle.bind(this)} style={{ fontSize: "3vh", position: "absolute", left: "11vw" }} className={this.state.icon}></i>
+          <a href="/">
+            <InteriorMenuLogo src="https://s3.amazonaws.com/cdn.sonyafalcon.com/interior-logo.svg" />
+          </a>
+        </InteriorMenuContainer>
+      </div>)
+    : (<InteriorMenuContainer>
+    <InteriorLeftMenu>
+      {this.props.content.LEFT.map(this.renderLinks)}
+    </InteriorLeftMenu>
+    <a href="/">
+      <InteriorMenuLogo src="https://s3.amazonaws.com/cdn.sonyafalcon.com/interior-logo.svg" />
+    </a>
+    <InteriorRightMenu>
+      {this.props.content.RIGHT.map(this.renderLinks)}
+    </InteriorRightMenu>
+  </InteriorMenuContainer>);
   }
 }
 
 export class InteriorSubMenu extends Component {
   constructor(props) {
     super(props);
+    this.links = [];
     this.renderLinks = this.renderLinks.bind(this);
+  }
+  componentDidMount() {
+    this.scrollElement();
   }
   renderLinks(item) {
     return (
@@ -333,14 +429,28 @@ export class InteriorSubMenu extends Component {
           color: item.id === this.props.post.id ? "#FF696B" : "#262A3B",
           padding: 10
         }}
+        innerRef={ref => (this.links[item.id] = ref)}
       >
-        <span style={{ lineHeight: "auto" }}>{item.title}</span>
+        <span style={{ lineHeight: "2vh" }}>{item.title}</span>
       </InteriorSubMenuLink>
     );
   }
+  scrollElement() {
+    if (this.container && this.links[this.props.post.id])
+      $(this.container).animate(
+        { scrollLeft: this.links[this.props.post.id].offsetLeft },
+        250
+      );
+  }
+  hide() {
+    if (this.container) $(this.container).css({ top: 0 });
+  }
+  show() {
+    if (this.container) $(this.container).css({ top: "12vh" });
+  }
   render() {
-    return (
-      <InteriorSubMenuContainer>
+    return (screenIs("mobile") ? null :
+      <InteriorSubMenuContainer innerRef={ref => (this.container = ref)}>
         {this.props.posts.map(this.renderLinks)}
       </InteriorSubMenuContainer>
     );
